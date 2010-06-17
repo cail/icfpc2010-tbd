@@ -15,4 +15,3 @@ if __name__ == '__main__':
     main()
     
 # test modification
-# тест русского шрифта

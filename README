@@ -1,2 +1,16 @@
 
   ICFPC TBD team repository
+
+ --- Instructions ---
+
+python (preferably 32-bit version)
+setuptools
+easy_install numpy, psyco (optional)
+eclipse, pydev
+
+--
+
+Eclipse projects correspong directories in repo (probably, top level directories only)
+But eclipse workspace itself is not in repo (that's why I added .metadata in gitignore)
+
+
