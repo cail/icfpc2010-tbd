@@ -107,7 +107,9 @@ class Scheme(object):
             result.append(values[self.from_[special_contact]])
             
         return result
-        
+
+server_inputs = map(int,'01202101210201202')
+key = map(int,'11021210112101221') 
         
 if __name__ == '__main__':
     #sch = Scheme()
@@ -116,11 +118,10 @@ if __name__ == '__main__':
     #sch.connect('0L','X')
     #sch.connect('0R','0R')
     
-    #inputs = map(int,'01202101210201202')
 
     sch = Scheme.load(open("../data/sample_scheme.txt"))
     inputs = [0,2,2,2,2,2,2,0,2,1,0,1,1,0,0,1,1] # from problem description
-    
+
     print sch
     
     outputs = sch.eval(inputs)
