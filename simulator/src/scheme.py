@@ -12,13 +12,11 @@ def parse_contact(e):
 def gate_function(fn, left, right):
     table =\
     [
-       [[(0,2),(1,2),(2,2)],
-        [(1,0),(2,0),(2,0)],
-        [(2,0),(1,0),(0,0)]],
+       [[(0,2),(2,2),(1,2)],
+        [(1,2),(0,0),(2,1)],
+        [(2,2),(1,1),(0,0)]],
     ] 
-    #return table[fn][left][right]
-    
-    return (left+right)%3, 1 
+    return table[fn][left][right]
 
 
 class Scheme(object):
@@ -80,18 +78,18 @@ class Scheme(object):
                                   values[self.from_[str(i)+'L']],
                                   values[self.from_[str(i)+'R']])
             result.append(values[self.from_[special_contact]])
+            
         return result
         
         
 if __name__ == '__main__':
     sch = Scheme()
     sch.add_node(0,0)
-    sch.add_node(1,0)
     sch.connect('X','0L')
     sch.connect('0L','X')
     sch.connect('0R','0R')
-    sch.connect('1L','1R')
-    sch.connect('1R','1L')
+    #sch.connect('1L','1R')
+    #sch.connect('1R','1L')
     
     print sch
     
