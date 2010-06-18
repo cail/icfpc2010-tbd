@@ -7,7 +7,10 @@
 
 python (preferably 32-bit version)
 setuptools
-easy_install numpy, psyco (optional)
+easy_install numpy
+(optional) psyco doesn't work with easy_install, do this: 
+    http://psyco.sourceforge.net/psycoguide/sources.html
+    oh, and also it's 32bit Python only.
 eclipse
 pydev (specify preferences->pydev->python interpreter)
 msysgit (for windows)
