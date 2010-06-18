@@ -1,5 +1,6 @@
 import re
 
+
 special_contact = 'X'
 
 
@@ -93,7 +94,7 @@ if __name__ == '__main__':
     
     print sch
     
-    inputs = [i%3 for i in range(17)]
+    inputs = map(int,'01202101210201202')
     outputs = sch.eval(inputs)
     print 'in ',''.join(map(str, inputs))
     print 'out',''.join(map(str, outputs))
