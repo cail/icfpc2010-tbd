@@ -12,14 +12,14 @@ def main():
     car = Car(2)
     car.main_chambers.append(Chamber([1, 0, 0], [1, 1, 0]))
     
-    #fuels = [array([[1]]), array([[1]])]
-    #print car.test_on_fuel(fuels)
+    #fuel = [array([[1]]), array([[1]])]
+    #print car.test_on_fuel(fuel)
     
-    fuels = solve_LP(car)
-    print fuels, car.test_on_fuel(fuels)
+    fuel = solve_LP(car)
+    print fuel, car.test_on_fuel(fuel)
     
-    fuels = solve_brute_force(car)
-    print fuels, car.test_on_fuel(fuels)
+    fuel = solve_brute_force(car)
+    print fuel, car.test_on_fuel(fuel)
     
     
     print 'it took', clock()-start, 'seconds'
