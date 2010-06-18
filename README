@@ -17,6 +17,12 @@ msysgit (for windows)
 Eclipse projects correspond to directories in repo (probably, top level directories only)
 But eclipse workspace itself is not in repo (that's why I added .metadata in gitignore)
 
+=== Useful links
+
+Good cheat sheet on python:
+  http://www.limsi.fr/Individu/pointal/docs/python:pqrc
+Git vs SVN crashcourse
+  http://git-scm.com/course/svn.html
 
 == Git-related stuff ==
 
@@ -52,3 +58,21 @@ git commit
 git fetch
 [resolve conflicts if any]
 git push
+
+== Git working cycle, cail's version ==
+!! git fetch only fetches the remote branch, but doesn't merge it with your 'master'
+!! git pull is a paired [git fetch+git merge] and is simpler
+
+git pull
+[hack]
+git add
+gitk (to ensure you added to index all changes you indended to add)
+git commit (or git gui for better and precise commit management)
+git pull
+[resolve conflicts if any]
+git push
+
+
+== Never Never Never revert your published history!
+Never do 'git commit --amend' if you've already push-ed the previous commit!
+Never do 'git rebase' on published commits
