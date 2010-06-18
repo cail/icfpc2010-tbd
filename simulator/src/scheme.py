@@ -6,7 +6,7 @@ special_contact = 'X'
 
 def parse_contact(e):
     assert e != special_contact
-    m = re.match("(\d)+(L|R)", e)
+    m = re.match(r"(\d)+(L|R)", e)
     return (int(m.group(1)), m.group(2))
 
 
@@ -27,6 +27,32 @@ class Scheme(object):
         'num_nodes',
         'function',
         ]
+    
+    @staticmethod
+    def load(lines):
+        text = "".join(line.strip() for line in lines)
+        scheme = Scheme()
+        
+        input, gates, output = text.split(':')
+        contact_re = r"(X|\d+(?:L|R))"
+        assert re.match(contact_re, input)
+        assert re.match(contact_re, output)
+        
+        scheme.connect(special_contact, input)
+        scheme.connect(output, special_contact)
+        
+        gates = gates.split(',')
+        for i,gate in enumerate(gates):
+            m = re.match(contact_re*2+r"(\d+)#"+contact_re*2+"$", gate)
+            leftIn, rightIn, function, leftOut, rightOut = m.groups()
+            
+            scheme.add_node(i, int(function))
+            
+            scheme.connect(leftIn, str(i)+'L')
+            scheme.connect(rightIn, str(i)+'R')
+        
+        assert str(scheme).replace('\n','') == text
+        return scheme
     
     def __init__(self):
         self.num_nodes = 0
@@ -84,17 +110,19 @@ class Scheme(object):
         
         
 if __name__ == '__main__':
-    sch = Scheme()
-    sch.add_node(0,0)
-    sch.connect('X','0L')
-    sch.connect('0L','X')
-    sch.connect('0R','0R')
-    #sch.connect('1L','1R')
-    #sch.connect('1R','1L')
+    #sch = Scheme()
+    #sch.add_node(0,0)
+    #sch.connect('X','0L')
+    #sch.connect('0L','X')
+    #sch.connect('0R','0R')
+    
+    #inputs = map(int,'01202101210201202')
+
+    sch = Scheme.load(open("../data/sample_scheme.txt"))
+    inputs = [0,2,2,2,2,2,2,0,2,1,0,1,1,0,0,1,1] # from problem description
     
     print sch
     
-    inputs = map(int,'01202101210201202')
     outputs = sch.eval(inputs)
     print 'in ',''.join(map(str, inputs))
     print 'out',''.join(map(str, outputs))
