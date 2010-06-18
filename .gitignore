@@ -1,2 +1,4 @@
 .metadata
 *.pyc
+*.svg
+*.png
