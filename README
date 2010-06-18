@@ -1,12 +1,16 @@
 
   ICFPC TBD team repository
 
- --- Instructions ---
+
+
+=== Instructions ===
 
 python (preferably 32-bit version)
 setuptools
 easy_install numpy, psyco (optional)
-eclipse, pydev
+eclipse
+pydev (specify preferences->pydev->python interpreter)
+msysgit (for windows)
 
 --
 
@@ -14,3 +18,26 @@ Eclipse projects correspong directories in repo (probably, top level directories
 But eclipse workspace itself is not in repo (that's why I added .metadata in gitignore)
 
 
+== Git-related stuff ==
+
+Generate keys (http://help.github.com/msysgit-key-setup/)
+Upload public key on github account settings page
+
+Line endings:
+  for linux    git config --global core.autocrlf input
+  for windows  git config --global core.autocrlf true
+
+git config --global user.name "Your Name"
+git config --global user.email "address you used to register on github"
+
+git clone git@github.com:cail/icfpc2010-tbd.git
+
+
+In eclipse specify this repo directory (icfpc2010-tbd ) as workspace directory. 
+But do not add '.metadata' dir to version control (it's content can be 
+specific for each user).
+'Import'->'Existing project into workspace' test_proj to workspace.
+
+Run it.
+
+Hopefully you are all set.
