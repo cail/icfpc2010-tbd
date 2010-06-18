@@ -3,6 +3,8 @@ from time import clock
 from numpy import array
 
 from car import *
+from solve_lp import *
+from solve_brute_force import *
        
 
 def main():
@@ -13,11 +15,12 @@ def main():
     #fuels = [array([[1]]), array([[1]])]
     #print car.test_on_fuel(fuels)
     
-    fuels = car.solveLP()
-    print fuels
-    #fuels = [array([[f]]) for f in fuels]
+    fuels = solve_LP(car)
+    print fuels, car.test_on_fuel(fuels)
     
-    print car.test_on_fuel(fuels)
+    fuels = solve_brute_force(car)
+    print fuels, car.test_on_fuel(fuels)
+    
     
     print 'it took', clock()-start, 'seconds'
 

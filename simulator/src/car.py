@@ -2,7 +2,6 @@ from random import randrange
 from collections import namedtuple
 
 from numpy import dot, array, ndarray
-from pulp import *
 
 
 __all__ = [
@@ -72,41 +71,6 @@ class Car(object):
             if not self.test_on_input(fuels, input):
                 return False
         return True
-    
-    def solveLP(self):
-        # since we are in logspace, all variables should be strictly positive
-        
-        eps = 1
-        vars = [LpVariable('x%d'%i, lowBound=eps, cat=LpInteger) 
-                for i in range(self.num_tanks)]
-        problem = LpProblem('search for fuel', LpMinimize)
-        problem += lpSum(vars)
-        
-        for chamber, isMain in self.all_chambers():
-            coeffs = [0]*self.num_tanks
-            for i in chamber.upper:
-                coeffs[i] += 1
-            for i in chamber.lower:
-                coeffs[i] -= 1
-            # i'm not doing it as difference of lpSums because it's buggy
-            term = lpSum(coeff*var for coeff, var in zip(coeffs, vars))
-            assert len(term) != 0, 'pipes are equivalent'
-            if isMain:
-                problem += term >= eps
-            else:
-                problem += term >= 0
-        
-        result = problem.solve(GLPK(msg=False))
-        
-        if result != LpStatusOptimal:
-            print problem
-            result = problem.solve(GLPK(msg=True))
-            print LpStatus[result]
-            assert False
-        
-        # go back from logspace to linear space
-        return [2**value(v) for v in vars]
-        
         
 
 def pipe_function(pipe, fuels, input):
@@ -117,7 +81,7 @@ def pipe_function(pipe, fuels, input):
             x *= fuels[section]
         return [x]
     
-    if isinstance(input, list):
+    if not isinstance(input, ndarray):
         input = array(input, dtype=int)
         
     for section in pipe:
