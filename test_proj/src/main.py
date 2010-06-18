@@ -9,12 +9,14 @@ from pulp import *
 
 
 def main():
-    x = LpVariable("x")
-    y = LpVariable("y")
+    x = LpVariable("x", lowBound=0)
+    y = LpVariable("y", lowBound=0, cat = LpInteger)
     
     problem = LpProblem("test problem", LpMinimize)
-    problem += x <= 2
-    problem += x+y >= 1
+    problem += 2*x+y # objective is added first
+    
+    # constraints
+    problem += x+y >= 0.9
     
     result = problem.solve(GLPK(msg=False))
     
@@ -26,5 +28,3 @@ def main():
 if __name__ == '__main__':
     main()
     
-# test modification
-# test modification 2
