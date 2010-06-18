@@ -1,64 +1,112 @@
 import re
 import sys
 
-def parse_target(t):
-    if t == 'X':
-        return ('X')
-    return (t[:-1], t[-1:])
 
+class Gate:
+    
+    def __init__(self, name, type, nin, nout):
+        self.name = name
+        self.type = type
+        self.nin = nin
+        self.nout = nout
+    
+    def __repr__(self):
+        return "name:{0}, type:{1} {2}:{3}".format(self.name, self.type, self.nin, self.nout) 
+        
+
+class Circuit:
+    
+    def __init__(self, layout):
+        
+        self.parse(layout)
+
+
+    def consume_target(self):
+        if self.data[0] == 'X':
+            self.data = self.data[1:]
+            return ('X')
+        m = re.match(r"(\A\d+)(L|R)", self.data)
+        if m:
+            self.data = self.data[len(m.group(0)) : ]
+            return (m.group(1), m.group(2))
+        raise Exception('cant consume target: ' + self.data[:10])
+    
+    def consume_type(self):
+        m = re.match(r"\A\d+", self.data)
+        self.data = self.data[len(m.group(0)):]
+        return m.group(0)
+        
+        
+    def consume(self, str):
+        if self.data[:len(str)] != str:
+            raise Exception('cant consume <'+ str + '>, data: '+ self.data[:len(str)])
+        self.data = self.data[len(str):]
+    
+    
+    def parse(self, layout):
+        self.data = layout.translate(None, "\n\r\t")
+        self.nodes = {}
+        
+        x_out = self.consume_target()
+        x = Gate('X', None, None, (x_out, None))
+        self.nodes[x.name] = x
+        
+        self.consume(':')
+        cnode = 0
+        while True:
+            node_in_l = self.consume_target()
+            node_in_r = self.consume_target()
+            type = self.consume_type()
+            self.consume('#')
+            node_out_l = self.consume_target()
+            node_out_r = self.consume_target()
+            node = Gate(str(cnode), type, (node_in_l, node_in_r), (node_out_l, node_out_r))
+            self.nodes[node.name] = node
+            
+            if self.data[0] == ':':
+                self.consume(':')
+                x_in = self.consume_target()
+                self.nodes['X'].nin = (x_in, None)
+                break
+            self.consume(',')
+            cnode += 1
+            
+        
 def print_target(t):
     if len(t) == 1:
         return t[0]
     return '"'+t[0]+'":'+t[1]
-
-    
+        
 def main():
 
     f = file(sys.argv[1])
     
-    lines = f.readlines()
-    nodes_count = int( lines[0].strip()[0:-2] ) + 2
+    layout = f.read()
+    c = Circuit(layout)
+    
+    print "// {0}".format(c.nodes)
     
     print "digraph unix {"
     print ' rank=sink; weight=1;  '
-    for node_no in range(0, int(nodes_count)):
+    
+    for node in sorted(c.nodes.keys()):
         
-        line = lines[node_no].strip()
+        node = c.nodes[node]
+                
+        print '// {0}'.format(node.name)
+        node_name = '"{0}" [ shape="record"'
+        if node.name != 'X':
+            node_name += ' label="{0}|<L> L | <R> R"'
+        node_name += '];'
+        print node_name.format(node.name)
         
-        if node_no == 0:
-            node = line[:-1]
-            out = parse_target(node)
-            print '"X" [ shape="record" ];'
-            print '"{0}" -> {1};'.format('X', print_target(out))
-            continue
-        
-        node = line[:-1]
-        (node_in, node_out) = node.split('#')
-        node_in = node_in[:-1]
-        #print win
-        #print wout
-        
-        match = re.match(r"(\d+[LR]|X)(\d+[LR]|X)", node_in)
-        if match:
-            node_in_left = parse_target( match.group(1) )
-            node_in_right = parse_target( match.group(2) )
-        match = re.match(r"(\d+[LR]|X)(\d+[LR]|X)", node_out)
-        if match:
-            node_out_left = parse_target( match.group(1) )
-            node_out_right = parse_target( match.group(2) )
-        
-        print '// {0}'.format(node)
-        node_no = node_no-1
-        print '"{0}" [ shape="record" label="{0}|<L> L | <R> R"];'.format(node_no)
-        
-        #print '"{0}":{2} -> "{1}":L;'.format(win_left[:-1],  node_no, win_left[-1:])
-        #print '"{0}":{2} -> "{1}":R;'.format(win_right[:-1], node_no, win_right[-1:])
-
-        print '"{0}":L:s -> {1}:n;'.format(node_no, print_target(node_out_left))
-        print '"{0}":R:s -> {1}:n;'.format(node_no, print_target(node_out_right))
+        if node.name != 'X':
+            print '"{0}":L:s -> {1}:n;'.format(node.name, print_target(node.nout[0]))
+            print '"{0}":R:s -> {1}:n;'.format(node.name, print_target(node.nout[1]))
+        else:
+            print '"{0}":s -> {1}:n;'.format(node.name, print_target(node.nout[0]))
 
         print " "
-        
     
     print "}"
     
