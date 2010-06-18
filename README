@@ -14,7 +14,7 @@ msysgit (for windows)
 
 --
 
-Eclipse projects correspong directories in repo (probably, top level directories only)
+Eclipse projects correspond to directories in repo (probably, top level directories only)
 But eclipse workspace itself is not in repo (that's why I added .metadata in gitignore)
 
 
@@ -41,3 +41,14 @@ specific for each user).
 Run it.
 
 Hopefully you are all set.
+
+
+== Git working cycle, as I understand it ==
+git fetch
+hack
+git add
+gitk (to ensure you added to index all changes you indended to add)
+git commit
+git fetch
+[resolve conflicts if any]
+git push
