@@ -80,3 +80,10 @@ git push
 Never do 'git commit --amend' if you've already push-ed the previous commit!
 Never do 'git rebase' on published commits
 
+
+== PuLP ==
+easy_install pulp
+install glpk (for windows it's http://gnuwin32.sourceforge.net/packages/glpk.htm)
+add glpksol.exe to path 
+(restart eclipse to update env. vars)
+run test_proj/src/main.py
