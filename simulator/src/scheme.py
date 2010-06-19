@@ -6,7 +6,7 @@ special_contact = 'X'
 
 def parse_contact(e):
     assert e != special_contact
-    m = re.match(r"(\d)+(L|R)", e)
+    m = re.match(r"(\d+)(L|R)", e)
     return (int(m.group(1)), m.group(2))
 
 
