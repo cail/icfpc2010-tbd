@@ -17,34 +17,31 @@ def login():
     br.submit()
     return br
 
-def submit_fuel(vehicle, fuel):
+def submit_fuel(car, fuel):
 
     br = login()
     
-    response = br.open("http://icfpcontest.org/icfp10/instance/{0}/solve/form".format(vehicle))
+    res = br.open("http://icfpcontest.org/icfp10/instance/{0}/solve/form".format(car))
     
     br.select_form(nr=0)
         
-    br["problem"] = vehicle
-    br["exampleSolution.contents"] = fuel
-    
+    br["contents"] = fuel
+
     response = br.submit()
     
-    #print response.info()  # headers
-    body =  response.read()  # body
+    body =  response.read()
 #    print body
     
     re_spanerr = re.compile(r"class=\"errors\"\>(.*?)\<\/span\>", re.S+re.M)
-    re_err = re.compile(r"\<pre\>(.*?)\</pre\>", re.S+re.M)
+    re_pre = re.compile(r"\<pre\>(.*?)\</pre\>", re.S+re.M)
 
-    m = re_err.search(body)
+    mpre = re_pre.search(body)
     mspan = re_spanerr.search(body)
     if mspan:
         error = mspan.group(1)
         return error
-    elif m:
-        error = m.group(1)
-        return error
+    elif mpre:
+        return mpre.group(1)
     else:
         return "OK " + body
 
@@ -109,7 +106,7 @@ def load_cars():
                 found = True
         if found:
             continue
-        sys.stderr.write("fetching '{0}' of {2}\n".format(c, len(cars)))
+        sys.stderr.write("fetching '{0}' of {1}\n".format(c, len(cars)))
         cardata = get_cardata(br, c)
         allcardata.append( (c, cardata) )
         print "{0}, {1}".format(c, cardata)

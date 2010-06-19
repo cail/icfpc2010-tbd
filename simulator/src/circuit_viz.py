@@ -1,11 +1,11 @@
 import re
 import sys
-from scheme import Scheme, parse_contact
+from scheme import Scheme, parse_pin
         
 def print_viz(e):
     if e == 'X':
         return 'X'
-    n, side = parse_contact(e)
+    n, side = parse_pin(e)
     return '"{0}":{1}'.format(n, side)
         
 def main():
@@ -30,9 +30,9 @@ def main():
         
         if node != 'X':
             edge_l = str(node)+'L'
-            print '"{0}":L:s -> {1}:n;'.format(node, print_viz(s.to[edge_l]))
+            print '"{0}":L:s -> {1}:n [color="red"];'.format(node, print_viz(s.to[edge_l]))
             edge_r = str(node)+'R'
-            print '"{0}":R:s -> {1}:n;'.format(node, print_viz(s.to[edge_r]))
+            print '"{0}":R:s -> {1}:n [color="green"];'.format(node, print_viz(s.to[edge_r]))
         else:
             print '"{0}":s -> {1}:n;'.format(node, print_viz(s.to[node]))
 
