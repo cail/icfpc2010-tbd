@@ -11,6 +11,7 @@ from scheme import *
 from multiprocessing import Pool
 
 
+
 def factorial(n):
     result = 1
     for i in range(1,n+1):
@@ -18,36 +19,14 @@ def factorial(n):
     return result
 
 
-def try_permutation((num_gates, inputs, outputs, pins, permutation)):
-    #if randrange(10000) == 0:
-    #    print permutation
-    #    sys.stdout.flush()
-    scheme = Scheme()
-    for i in range(num_gates):
-        scheme.add_node(i,0)
-    for in_, out in zip(pins, permutation):
-        scheme.connect(in_,out)
-     
-    if outputs == scheme.eval(inputs):
-        return scheme
-
-
 def brute_force(num_gates, inputs, outputs):
     assert len(inputs) == len(outputs)
-    pins = pin_names(num_gates)
     
-    pool = Pool()
-
-    pc = pins
-    shuffle(pins)
-    
-    tasks = ((num_gates, inputs, outputs, pins, p) 
-             for p in permutations(pc))
-    schemes = pool.imap(try_permutation, tasks)
-    
-    for scheme in schemes:
-        if scheme is not None:
-            return scheme
+    for from_ in permutations(range(num_gates*2+1)):
+        if eval_scheme_and_compare(from_, inputs, outputs):
+            scheme = Scheme.from_permutation(from_)
+            assert scheme.eval(inputs) == outputs
+            return
         
 
 if __name__ == '__main__':

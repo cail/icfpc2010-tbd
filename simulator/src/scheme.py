@@ -1,10 +1,13 @@
 import re
 
+
 __all__ = [
     'pin_names',
     'gate_values',
     'gate_function',
     'Scheme',
+    'eval_scheme',
+    'eval_scheme_and_compare',
     'server_inputs',
     'key',
 ]
@@ -65,6 +68,23 @@ class Scheme(object):
         assert str(scheme).replace('\n','') == text
         return scheme
     
+    @staticmethod
+    def from_permutation(from_):
+        scheme = Scheme()
+        pins = pin_names(len(from_)//2)
+        for i in range(len(from_)//2):
+            scheme.add_node(i, 0)
+        for to, fr in enumerate(from_):
+            scheme.connect(pins[fr], pins[to])
+        return scheme
+    
+    def get_permutation(self):
+        pins = pin_names(self.num_nodes)
+        from_ = [None]*len(pins)
+        for k,v in self.from_.items():
+            from_[pins.index(k)] = pins.index(v)
+        return from_
+    
     def __init__(self):
         self.num_nodes = 0
         self.to = {}
@@ -100,7 +120,7 @@ class Scheme(object):
         
         return '\n'.join(result)
     
-    def eval(self, inputs):
+    def naive_eval(self, inputs):
         result = []
         values = {}
         for i in range(self.num_nodes):
@@ -116,6 +136,48 @@ class Scheme(object):
                                   values[self.from_[str(i)+'R']])
             result.append( values[self.from_['X']] )
         return result
+    
+    def eval(self, inputs):
+        result = eval_scheme(self.get_permutation(), inputs)
+        assert result == self.naive_eval(inputs)
+        return result
+
+
+table = []
+for i in range(3):
+    for j in range(3):
+        left, right = gate_function(0,i,j)
+        table.append(left)
+        table.append(right)
+
+def simulation_step(values, from_, input):
+    local_table = table
+    values[0] = input
+    for i in range(len(from_)//2):
+        left_in = values[from_[2*i+1]]
+        right_in = values[from_[2*i+2]]
+        left_out = local_table[left_in*6+right_in*2]
+        right_out = local_table[left_in*6+right_in*2+1]
+        values[2*i+1] = left_out
+        values[2*i+2] = right_out
+    return values[from_[0]]
+       
+def eval_scheme(from_, inputs):
+    outputs = []
+    
+    values = [0]*len(from_)
+    for input in inputs:
+        outputs.append(simulation_step(values, from_, input))
+    
+    return outputs
+
+def eval_scheme_and_compare(from_, inputs, outputs):
+    values = [0]*len(from_)
+    for input,output in zip(inputs, outputs):
+        if simulation_step(values, from_, input) != output:
+            return False
+    
+    return True
             
 
 server_inputs = map(int,'01202101210201202')
