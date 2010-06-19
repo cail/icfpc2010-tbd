@@ -1,7 +1,15 @@
-from submit_car import submit_car
 import random
 import time
+import re
 from pprint import pprint
+
+from submit_car import submit_car as submit_car_orig
+
+def submit_car(car, cdr):
+    print '=' * 5 + ' ' + car + ' ' + '=' * 5 
+    res = submit_car_orig(car, cdr)
+    return re.sub(r'^\s*circuit output starts with\s*[012]*\s*this is a legal prefix\s*', '', res)
+    
 
 fuel = """
 0R:
@@ -17,15 +25,13 @@ fuel = """
 """
 
 def pause():
-    time.sleep(1.0  + random.random()) 
+    time.sleep(1.0  + random.random())
+    
+#for i in range(16):
+#    car = '{0:b}'.format(i) + '22000010'
+#    print '=' * 20 
+#    print car
+#    print submit_car(car, fuel)
+#    pause()
 
-for i in range(16):
-    car = '{0:b}'.format(i) + '22000010'
-    print '=' * 20 
-    print car
-    print
-    print submit_car(car, fuel)
-    pause()
-    print
-    print
-
+print submit_car('122000010', fuel)
