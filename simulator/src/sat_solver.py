@@ -90,7 +90,7 @@ class CNFBuilder(object):
             print 'UNSAT'
             return
         print 'SAT'
-        for i in range(1, self.num_vars+1):
+        for i in range(2, self.num_vars+1):
             print 'var%s = %s'%(i, self.values.get(i,'*'))
         
 
@@ -106,7 +106,7 @@ if __name__ == '__main__':
     x, y, z = cnf.new_vars(3)
     
     
-    cnf.add_constraint([[1,2],[-1],[2]],x,y)
+    cnf.add_constraint([[1,2],[-1],[2]], x, y)
     cnf.solve()
     
     cnf.print_solution()

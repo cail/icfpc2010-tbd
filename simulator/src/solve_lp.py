@@ -24,11 +24,11 @@ def solve_LP(car):
         else:
             problem += term >= 0
     
-    result = problem.solve_cnf(GLPK(msg=False))
+    result = problem.solve(GLPK(msg=False))
     
     if result != LpStatusOptimal:
         print problem
-        result = problem.solve_cnf(GLPK(msg=True))
+        result = problem.solve(GLPK(msg=True))
         print LpStatus[result]
         assert False
     

@@ -54,7 +54,7 @@ if __name__ == '__main__':
     start = clock()
     #brute_force(4, [0,1,2,1], [0,1,0,1])
     
-    solution = brute_force(6, server_inputs, key)
+    solution = brute_force(4, server_inputs, key)
     
     if solution is not None:
         print 'Found solution'
