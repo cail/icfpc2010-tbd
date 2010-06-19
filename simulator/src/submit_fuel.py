@@ -109,7 +109,7 @@ def load_cars():
                 found = True
         if found:
             continue
-        sys.stderr.write("fetching '{0}' of {2}\n".format(c, len(cars)))
+        sys.stderr.write("fetching '{0}' of {1}\n".format(c, len(cars)))
         cardata = get_cardata(br, c)
         allcardata.append( (c, cardata) )
         print "{0}, {1}".format(c, cardata)
