@@ -1,0 +1,133 @@
+122000010
+
+0R:
+1LX0#2L1L,
+0R3L0#0L2R,
+0L1R0#X3R,
+5L2R0#1R4L,
+3R4R0#6R4R,
+7R7L0#3L7L,
+6R4L0#7R6L,
+5R6L0#5R5L:
+2L
+
+
+
+022000010
+parse error in car description
+    "input" (line 1, column 2):
+unexpected '2'
+expecting end of input
+
+
+
+122000010
+This instance already exists, you cannot submit it again.
+
+
+
+1022000010
+parse error in car description
+    "input" (line 1, column 3):
+numerical value must be 0 or 1 here
+
+
+
+1122000010
+you have produced fuel
+for 0 tanks
+using 0 ingredients of air
+car must contain at least one Main reaction chamber
+    Ja.
+sections must be properly connected
+In the car, tank 0 is not properly connected to tank 4
+
+
+
+10022000010
+parse error in car description
+    "input" (line 1, column 9):
+unexpected '0'
+expecting end of input
+
+
+
+10122000010
+parse error in car description
+    "input" (line 1, column 3):
+numerical value must be 0 or 1 here
+
+
+
+11022000010
+parse error in car description
+    "input" (line 1, column 4):
+numerical value must be 0 or 1 here
+
+
+
+11122000010
+parse error in car description
+    "input" (line 1, column 5):
+unexpected token
+expecting: '2' or numerical value must be 0 or 1 here
+
+
+
+100022000010
+parse error in car description
+    "input" (line 1, column 5):
+unexpected '2'
+expecting end of input
+
+
+
+100122000010
+parse error in car description
+    "input" (line 1, column 10):
+unexpected '0'
+expecting end of input
+
+
+
+101022000010
+parse error in car description
+    "input" (line 1, column 10):
+unexpected '0'
+expecting end of input
+
+
+
+101122000010
+parse error in car description
+    "input" (line 1, column 3):
+numerical value must be 0 or 1 here
+
+
+
+110022000010
+parse error in car description
+    "input" (line 1, column 10):
+unexpected '0'
+expecting end of input
+
+
+
+110122000010
+parse error in car description
+    "input" (line 1, column 4):
+numerical value must be 0 or 1 here
+
+
+
+111022000010
+parse error in car description
+    "input" (line 1, column 5):
+numerical value must be 0 or 1 here
+
+
+
+111122000010
+parse error in car description
+    "input" (line 1, column 5):
+numerical value must be 0 or 1 here

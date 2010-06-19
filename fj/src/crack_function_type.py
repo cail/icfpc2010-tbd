@@ -8,7 +8,7 @@ def grouper(n, iterable, fillvalue=None):
 
 def fuction_generator(constraints):
     """
-    constraints are pair of the form (0, 0):(0, 2) 
+    constraints is a dictionary of pairs of the form (0, 0):(0, 2) 
     """
     current = [0] * 18
     # convert constraints
