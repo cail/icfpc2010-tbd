@@ -10,7 +10,7 @@ def submit_car(vehicle, fuel):
     
     assert br.viewing_html()
     
-    print br.title()
+    #print br.title()
     
     br.select_form(name="f")
     
@@ -19,7 +19,7 @@ def submit_car(vehicle, fuel):
     
     response = br.submit()
     
-    print response.geturl()
+    #print response.geturl()
     
     response = br.follow_link(text_regex=r".* new car.*")
     
@@ -32,16 +32,21 @@ def submit_car(vehicle, fuel):
     
     #print response.info()  # headers
     body =  response.read()  # body
+#    print body
     
-    re_err = re.compile(r".*\<pre\>(.*)\</pre\>", re.S+re.M)
-    m = re_err.match(body)
-    
-    if m:
+    re_spanerr = re.compile(r"class=\"errors\"\>(.*?)\<\/span\>", re.S+re.M)
+    re_err = re.compile(r"\<pre\>(.*?)\</pre\>", re.S+re.M)
+
+    m = re_err.search(body)
+    mspan = re_spanerr.search(body)
+    if mspan:
+        error = mspan.group(1)
+        return error
+    elif m:
         error = m.group(1)
         return error
-        
     else:
-        print "ok!"
+        return "OK " + body
     
     
 if __name__ == '__main__':
@@ -60,5 +65,7 @@ if __name__ == '__main__':
         
         result = submit_car(vehicle, fuel)
         
+        print
         print result
+        print 
     
