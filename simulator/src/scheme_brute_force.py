@@ -1,7 +1,7 @@
 import psyco
 psyco.full()
 
-from random import randrange
+from random import randrange, shuffle
 from time import clock
 from itertools import *
 import sys
@@ -26,18 +26,23 @@ def try_permutation((num_gates, inputs, outputs, contacts, permutation)):
     for i in range(num_gates):
         scheme.add_node(i,0)
     for in_, out in zip(contacts, permutation):
-        scheme.connect(in_,out) 
-    if scheme.eval(inputs) == outputs:
+        scheme.connect(in_,out)
+     
+    if outputs == scheme.eval(inputs):
         return scheme
 
 
 def brute_force(num_gates, inputs, outputs):
+    assert len(inputs) == len(outputs)
     contacts = ['X'] + [str(i)+side for i in range(num_gates) for side in 'LR']
     
     pool = Pool()
 
+    pc = contacts
+    shuffle(contacts)
+    
     tasks = ((num_gates, inputs, outputs, contacts, p) 
-             for p in permutations(contacts))
+             for p in permutations(pc))
     schemes = pool.imap(try_permutation, tasks)
     
     for scheme in schemes:
@@ -51,5 +56,6 @@ def brute_force(num_gates, inputs, outputs):
 if __name__ == '__main__':
     start = clock()
     #brute_force(4, [0,1,2,1], [0,1,0,1])
-    brute_force(6, server_inputs, key)
+    
+    solution = brute_force(6, server_inputs, key)
     print 'it took', clock()-start,'seconds'

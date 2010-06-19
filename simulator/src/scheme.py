@@ -91,25 +91,25 @@ class Scheme(object):
     
     def eval(self, inputs):
         result = []
-        
         values = {}
         for i in range(self.num_nodes):
             values[str(i)+'L'] = 0
             values[str(i)+'R'] = 0
             
-        for step, input in enumerate(inputs):
+        for input in inputs:
             values[special_contact] = input
             for i in range(self.num_nodes):
                 values[str(i)+'L'], values[str(i)+'R'] =\
                     gate_function(self.function[i],
                                   values[self.from_[str(i)+'L']],
                                   values[self.from_[str(i)+'R']])
-            result.append(values[self.from_[special_contact]])
-            
+            result.append( values[self.from_[special_contact]] )
         return result
+            
 
 server_inputs = map(int,'01202101210201202')
-key = map(int,'11021210112101221') 
+key = map(int,'11021210112101221')
+ 
         
 if __name__ == '__main__':
     #sch = Scheme()
@@ -124,6 +124,6 @@ if __name__ == '__main__':
 
     print sch
     
-    outputs = sch.eval(inputs)
+    outputs = list(sch.eval(inputs))
     print 'in ',''.join(map(str, inputs))
     print 'out',''.join(map(str, outputs))
