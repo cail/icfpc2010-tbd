@@ -1,22 +1,25 @@
 import re
 import mechanize
 import sys
+import time
 from submit_car import PASSWD, USER
 from mechanize._beautifulsoup import BeautifulSoup, BeautifulStoneSoup
 
-def submit_fuel(vehicle, fuel):
 
+def login():
     br = mechanize.Browser()
     br.open("http://icfpcontest.org/icfp10/login")
     assert br.viewing_html()
-    #print br.title()
     
-    br.select_form(name="f")
-    
+    br.select_form(name="f")    
     br["j_username"] = USER
     br["j_password"] = PASSWD
-    
-    response = br.submit()
+    br.submit()
+    return br
+
+def submit_fuel(vehicle, fuel):
+
+    br = login()
     
     response = br.open("http://icfpcontest.org/icfp10/instance/{0}/solve/form".format(vehicle))
     
@@ -46,15 +49,9 @@ def submit_fuel(vehicle, fuel):
         return "OK " + body
 
 def list_cars():
-    br = mechanize.Browser()
-    br.open("http://icfpcontest.org/icfp10/login")
-    assert br.viewing_html()
-    
-    br.select_form(name="f")    
-    br["j_username"] = USER
-    br["j_password"] = PASSWD
-    response = br.submit()
-        
+
+    br = login()
+            
     response = br.follow_link(text_regex=r".*Submit fuel.*")
     body = response.read()
     
@@ -77,7 +74,47 @@ def list_cars():
         
         ids.append( (id, suppliers))
     return ids
+    
+    
+def get_cardata(br, car):
+     
+    if br == None:
+        br = login()
+    
+    res = br.open("http://icfpcontest.org/icfp10/instance/{0}/solve/form".format(car))
+     
+    body = res.read()
+     
+    bs = BeautifulSoup(body)
+    form = bs.fetch('form')[0]
+    cardata = form.div.contents[1]
+    return cardata
+     
+def load_cars():
+    cars = open('data/car_ids').readlines()
+    br = login()
+
+    existing_cardata = open('data/car_data').readlines()
+
+    allcardata = []
+    
+    for car in cars:
+        c, no = car.split(', ')
         
+        found = False
+        for ec in existing_cardata:
+            existingid = ec.split(', ') 
+            if existingid[0] == c:
+                sys.stderr.write("skipping {0}\n".format(c))
+                found = True
+        if found:
+            continue
+        sys.stderr.write("fetching '{0}' of {2}\n".format(c, len(cars)))
+        cardata = get_cardata(br, c)
+        allcardata.append( (c, cardata) )
+        print "{0}, {1}".format(c, cardata)
+        time.sleep(2)
+    return
         
             
 if __name__ == '__main__':
@@ -86,10 +123,15 @@ if __name__ == '__main__':
         print "or listcars"
          
     else:
-        if len(sys.argv) == 2 and sys.argv[1] == 'listcars':
-            list =  list_cars()
-            for item in list:
-                print "{0}, {1}".format(item[0], item[1])
+        if len(sys.argv) == 2:
+
+            if sys.argv[1] == 'listcars':
+                list =  list_cars()
+                for item in list:
+                    print "{0}, {1}".format(item[0], item[1])
+    
+            if sys.argv[1] == 'loadcars':
+                load_cars()
 
         else:
             vehicle = sys.argv[1]
