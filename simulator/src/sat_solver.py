@@ -46,6 +46,9 @@ class CNFBuilder(object):
         self.num_vars = 0
         self.clauses = []
         
+        self.one = self.new_var()
+        self.clauses.append([self.one])
+        
     def new_var(self):
         self.num_vars += 1
         return self.num_vars
@@ -54,18 +57,11 @@ class CNFBuilder(object):
         for i in range(n):
             yield self.new_var()
             
-    def new_trit(self):
-        t0, t1 = self.new_vars(2)
-        self.add_constraint([[-1,-2]],t0,t1)
-        return t0, t1
-
-    def new_trits(self,n):
-        for i in range(n):
-            yield self.new_trit()
-    
     def add_constraint(self, constraint, *vars):
         if len(vars) == 0:
             self.clauses += constraint
+            return
+        
         tr = dict((sign*(i+1), sign*vars[i]) 
                   for i in range(len(vars)) for sign in [-1,1])
         for clause in constraint:
