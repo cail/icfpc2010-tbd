@@ -1,0 +1,1 @@
+python src/circuit_viz.py ../circuit_viz/circuits/$1 | dot -Tsvg > ../circuit_viz/circuits/$1.svg
