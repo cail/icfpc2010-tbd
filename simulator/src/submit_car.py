@@ -2,6 +2,9 @@ import re
 import mechanize
 import sys
 
+USER = "TBD"
+PASSWD = "460291662043320768111588216149264970701887731096381490177520"
+
 def submit_car(vehicle, fuel):
 
     br = mechanize.Browser()
@@ -14,8 +17,8 @@ def submit_car(vehicle, fuel):
     
     br.select_form(name="f")
     
-    br["j_username"] = "TBD"
-    br["j_password"] = "460291662043320768111588216149264970701887731096381490177520"
+    br["j_username"] = USER
+    br["j_password"] = PASSWD
     
     response = br.submit()
     
@@ -51,17 +54,21 @@ def submit_car(vehicle, fuel):
     
 if __name__ == '__main__':
     if len(sys.argv) < 3:
-        print "use <vehiclefile> <fuelfile>"
+        print "use <vehicledata/file> <fuelfile>"
          
     else:
         vehicle = sys.argv[1]
+        fuel = sys.argv[2]
+        
+        if re.match(r"[012]+", fuel):
+            vehicle, fuel = fuel, vehicle
         
         if re.match(r"[012]+", vehicle):
             pass
         else:
             vehicle = open(vehicle).read()
 
-        fuel = open(sys.argv[2]).read()
+        fuel = open(fuel).read()
         
         result = submit_car(vehicle, fuel)
         
