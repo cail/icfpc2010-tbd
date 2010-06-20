@@ -5,7 +5,7 @@ from copy import deepcopy
 
 from car import fuel_to_stream
 
-def solve_monte_carlo(car, size=2, attempts=5000):
+def solve_monte_carlo(car, size=2, attempts=3000):
     best = None
     best_len = 1e100
     

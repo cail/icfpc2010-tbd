@@ -1,7 +1,7 @@
 from random import randrange
 from collections import namedtuple
 
-from numpy import dot, array, ndarray
+from numpy import dot, array, ndarray, identity
 
 from tstream_parser import parse_chambers
 from tstream_composer import compose_matrices
@@ -12,10 +12,13 @@ __all__ = [
     'fuel_to_stream',
 ]
 
-def fuel_to_stream(fuel):
+def numpy_fuel(fuel):
     if not isinstance(fuel[0], ndarray):
         fuel = [array([[f]], dtype=object) for f in fuel]
-    
+    return fuel
+
+def fuel_to_stream(fuel):
+    fuel = numpy_fuel(fuel)
     q = []
     for f in fuel:
         q.append(list(map(list,f.transpose())))
@@ -82,6 +85,31 @@ class Car(object):
         return True
 
     def test_on_fuel(self, fuel):
+        fuel = numpy_fuel(fuel)
+        n, n = fuel[0].shape
+        for chamber, isMain in self.all_chambers():
+            upper = identity(n, dtype=object)
+            for t in chamber.upper:
+                upper = dot(upper, fuel[t])
+            lower = identity(n, dtype=object)
+            for t in chamber.lower:
+                lower = dot(lower, fuel[t])
+            flag = True
+            for i in range(n):
+                for j in range(n):
+                    if upper[i,j] < lower[i,j]:
+                        flag = False
+                        break
+                    if isMain and i == 0 and upper[i,j] <= lower[i,j]:
+                        flag = False
+                        break
+            if not flag:
+                return False
+        
+        #assert self.test_on_fuel_old(fuel)
+        return True
+
+    def test_on_fuel_old(self, fuel):
         """
         fuel is list of either numpy 2d arrays or just integers (for 1d case)
         """

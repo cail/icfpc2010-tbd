@@ -1,7 +1,9 @@
 from pprint import pprint
 import csv
 import re
-from random import shuffle, random
+from random import shuffle, random, seed
+#seed(123)
+
 import sys
 from multiprocessing import Pool, TimeoutError
 
@@ -14,7 +16,7 @@ from submit_fuel import submit_fuel, login, submit_test_car_fuel
     
 VERBOSE = True
 
-max_suffix = 40
+max_suffix = 30
 
 def solve(car_string):
     assert car_string.strip() != '0'
