@@ -9,7 +9,7 @@ from multiprocessing import Pool, TimeoutError
 from car import Car, fuel_to_stream
 from scheme_as_sat import generate_scheme_for_fuel
 from find_fuel import find_fuel_stream
-from submit_fuel import submit_fuel, login
+from submit_fuel import submit_fuel, login, submit_test_car_fuel
     
     
 VERBOSE = True
@@ -49,7 +49,7 @@ def solve(car_string):
 
 if __name__ == '__main__':
     
-    print "Usage options: skipsubmitted | startwith <carno> | maxsuffix <no> | minsuppliers <no> | maxsuppliers <no> | sortbycarsize"
+    print "Usage options: skipsubmitted | startwith <carno> | maxsuffix <no> | minsuppliers <no> | maxsuppliers <no> | sortbycarsize | TESTONLY"
     
     data = csv.reader(open('../data/car_ids'))
     data = list(data)
@@ -66,6 +66,7 @@ if __name__ == '__main__':
     minsuppliers = 0
     maxsuppliers = 1000
     sortbycarsize = False
+    testonly = False
     for i, v in enumerate(sys.argv):
         if v == 'skipsubmitted':
             skipsubmitted = True
@@ -79,6 +80,8 @@ if __name__ == '__main__':
             maxsuppliers = int(sys.argv[i+1])
         if v == 'sortbycarsize':
             sortbycarsize = True
+        if v == 'TESTONLY':
+            testonly = True
             
 
     submittedcars = set()
@@ -156,7 +159,12 @@ if __name__ == '__main__':
             #    browser = login()
             #    print 'ok'
                 
-            print submit_fuel(car_no, result, br=browser)
+            if testonly:
+                print submit_test_car_fuel(stream, result)
+                #if success:
+                open('test_data', 'a').write("{0}\n{1}", car_no, result)
+            else:
+                print submit_fuel(car_no, result, br=browser)
             
             solved += 1
             
