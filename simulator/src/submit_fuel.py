@@ -87,7 +87,8 @@ def submit_fuel(car, fuel, br=None):
             assert False, result
         return result
 
-    if result.find('Good!') != -1:
+    if result.find('Good!') == -1:
+        print '========== Server fail ==========='
         if FAIL_ON_ASSERT:
             assert False, result
     else:
