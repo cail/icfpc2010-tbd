@@ -1,8 +1,21 @@
 from time import clock
 from random import random
+from pprint import pprint
 
 from sat_solver import *
 from scheme import *
+
+__all__ = [
+    'generate_scheme_for_fuel',
+]
+
+USE_CACHE = True
+
+import logging
+LOG_FILENAME = 'scheme_as_sat.log'
+logging.basicConfig(filename=LOG_FILENAME, level=logging.DEBUG)
+#logging.basicConfig(level=logging.DEBUG)
+
 
 class SchemeCNFBuilder(CNFBuilder):
     def new_trit(self):
@@ -92,9 +105,11 @@ def time_to_reach_output(index, num_gates, can_p):
 def hz2(num_gates, inputs, outputs, can_p=None):
     assert len(inputs) == len(outputs)
    
-    print 'solving for length', len(outputs), ', numgates =', num_gates
-    print '[%s]'%', '.join('*' if i is None else str(i) for i in inputs),
-    print '->',outputs
+    logging.info('solving for length %s, numgates = %s'%(len(outputs), num_gates))
+    logging.info('[%s] -> %s'%
+                 (', '.join('*' if i is None else str(i) for i in inputs),
+                  outputs))
+    
     start = clock()
     
     cnf = SchemeCNFBuilder()
@@ -137,7 +152,7 @@ def hz2(num_gates, inputs, outputs, can_p=None):
     time_to_reach_from = [time_to_reach_output(i, num_gates, can_p) 
                     for i in range(num_pins)]
     
-    print time_to_reach_from
+    #print time_to_reach_from
 
     #if None not in inputs:
     #    assert time_to_reach_from[0]+len(server_inputs) >= len(outputs), \
@@ -192,14 +207,13 @@ def hz2(num_gates, inputs, outputs, can_p=None):
                         
         multiplex_trit(0, cnf.get_constant_trit(output), values)    
     
-    print cnf.num_vars,'vars'
-    print len(cnf.clauses), 'clauses'
+    logging.info("%s vars"%cnf.num_vars)
+    logging.info("%s clauses"%len(cnf.clauses))
     
     cnf.solve()
     
-    print 'it took', clock()-start,'seconds'
-    print 'problem is ', 'sat' if cnf.satisfiable else 'unsat'
-    print
+    logging.info('it took %ss'%(clock()-start))
+    logging.info('problem is '+('sat' if cnf.satisfiable else 'unsat'))
     
     if cnf.satisfiable:
         pins = pin_names(num_gates)
@@ -241,59 +255,120 @@ def print_topology(num_gates, can_p):
                 print '.',
         print
 
+def reduce_problem(outputs):
+    layer_size = 1
+    
+    postprocessor = 2
+    num_layers = 7
+    
+    fast_params = \
+        [(1,i) for i in range(18,8,-2)]+\
+        [(2,i) for i in range(14,8,-2)]
+    
+    if len(outputs) > 120:
+        params = [(3,5), (4,3), (4,2), (4,1)]
+    elif len(outputs) > 80:
+        params = [(3,6), (3,5), (4,4), (4,3), (4,2)]
+    else:
+        params = [(3,7), (4,7), (4,6), (4,5)]
+    
+    for postprocessor, num_layers in fast_params+params:
+        logging.info("reducing for post=%s, layers=%s"%(postprocessor, num_layers))
+        num_gates = postprocessor+num_layers*layer_size
+        
+        def can_p(i,j):
+            gate1 = (i-1)//2
+            gate2 = (j-1)//2
+            
+            layer1 = (gate1-postprocessor)//layer_size
+            layer2 = (gate2-postprocessor)//layer_size
+            
+            if i == 0:
+                return layer2 == num_layers-1
+            
+            if 0 <= gate1 < postprocessor:
+                if 0 <= gate2 < postprocessor:
+                    return True
+                    #return gate2 >= gate1
+                return j == 0 or\
+                    layer2 == num_layers-1 or\
+                    0 <= gate2 < postprocessor
+            if layer1 == 0:
+                return 0 <= gate2 < postprocessor
+            return layer1 >= 0 and (layer1 == layer2+1)
+            
+        inputs = [None]*len(outputs)
+        tail_scheme = hz2(num_gates, inputs, outputs, can_p=can_p)
+        
+        if tail_scheme is None:
+            continue
+        
+        logging.info('reduction found to')
+        significant_part = inputs[:inputs.index(None)]
+        logging.info('significant inputs %s'%significant_part)
+        
+        return significant_part, tail_scheme
+    
+    return None
+
+
 def generate_scheme(outputs):
     
     if len(outputs) <= len(server_inputs):
-        for num_gates in range(0, 5):
+        max_gates = 4
+        if len(outputs) <= 9:
+            max_gates = 5
+        for num_gates in range(0, max_gates+1):
             result = hz2(num_gates, server_inputs[:len(outputs)], outputs)
             if result is not None:
                 return result
-        print 'we fail'
+        logging.info('we fail')
         #return
     
-    postprocessor = 3
-    num_layers = 6
-    layer_size = 1
+    red = reduce_problem(outputs)
+    significant_part, tail_scheme = red 
     
-    num_gates = postprocessor+num_layers*layer_size
+    scheme = cached_generate_scheme(significant_part)
     
-    def can_p(i,j):
-        gate1 = (i-1)//2
-        gate2 = (j-1)//2
+    scheme.append(tail_scheme)
+    return scheme
+
+CACHE_FILE = 'scheme_as_sat_cache.txt'
+
+def load_cache():
+    global cache
+    with open(CACHE_FILE) as cache_file:
+        cache = eval(cache_file.read())
         
-        layer1 = (gate1-postprocessor)//layer_size
-        layer2 = (gate2-postprocessor)//layer_size
-        
-        if i == 0:
-            return layer2 == num_layers-1
-        
-        if 0 <= gate1 < postprocessor:
-            if 0 <= gate2 < postprocessor:
-                return True
-                return gate2 >= gate1
-            return j == 0 or layer2 == num_layers-1 or 0 <= gate2 < postprocessor
-        if layer1 == 0:
-            return 0 <= gate2 < postprocessor
-        return layer1 >= 0 and (layer1 == layer2+1)
-        
-    print_topology(num_gates, can_p)
+def save_cache():
+    global cache
+    with open(CACHE_FILE,'wt') as cache_file: 
+        print>>cache_file, "# (suffix): scheme"
+        pprint(cache, stream=cache_file)
+
+load_cache()
+
+def cached_generate_scheme(outputs):
+    if USE_CACHE and tuple(outputs) in cache:
+        logging.info('using cached results')
+        return Scheme.load(cache[tuple(outputs)].split("\n"))
     
-    inputs = [None]*len(outputs)
-    result = hz2(num_gates, inputs, outputs, can_p=can_p)
-    print 'result found'
-    significant_part = inputs[:inputs.index(None)]
-    print 'on significant inputs', significant_part
-    print
+    result = generate_scheme(outputs)
+    assert result.eval((server_inputs+[2]*1000)[:len(outputs)]) == outputs
     
-    q = generate_scheme(significant_part)
-    print ''
+    load_cache()
+    q = cache.get(tuple(outputs))
+    s = str(result)
+    if q is None or len(q) > len(s):
+        cache[tuple(outputs)] = s
+        save_cache()
     
-    q.append(result)
-    return q # composed with result
-        
+    return result
+    
+            
 
 def generate_scheme_for_fuel(suffix):
-    result = generate_scheme(key+suffix)
+    result = cached_generate_scheme(key+suffix)
     assert result.eval(server_inputs+[0 for q in suffix]) == key+suffix
     return result
 
@@ -304,8 +379,7 @@ if __name__ == '__main__':
 
     start = clock()
 
-    suffix = [1,1,1,1,0]
-    suffix = []
+    suffix = [1,1,1,1,1]
     
     result = generate_scheme_for_fuel(suffix)
     
