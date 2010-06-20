@@ -130,10 +130,10 @@ def get_cardata(br, car):
     return cardata
      
 def load_cars():
-    cars = open('data/car_ids').readlines()
+    cars = open('../data/car_ids').readlines()
     br = login()
 
-    existing_cardata = open('data/car_data').readlines()
+    existing_cardata = open('../data/car_data').readlines()
 
     allcardata = []
     
@@ -161,6 +161,7 @@ if __name__ == '__main__':
     if len(sys.argv) < 2:
         print "use <vehicleid> <fuelfile or ->"
         print "or listcars"
+        print "or loadcars"
          
     else:
         if len(sys.argv) == 2:
