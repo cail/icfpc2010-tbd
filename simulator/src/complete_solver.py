@@ -61,7 +61,7 @@ if __name__ == '__main__':
         id, sup = line
         suppliers[int(id)] = int(sup)
 
-    skipsubmitted = False
+    skipsubmitted = True
     start_with = None
     minsuppliers = 0
     maxsuppliers = 1000

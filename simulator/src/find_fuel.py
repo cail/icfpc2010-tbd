@@ -13,7 +13,7 @@ def find_fuel(car):
     best = None
     best_len = 1e100
     
-    for f in [solve_brute_force, solve_monte_carlo, solve_LP]:
+    for f in [solve_brute_force, solve_LP]:
         print f.__name__,
         fuel = f(car)
         if fuel is not None:

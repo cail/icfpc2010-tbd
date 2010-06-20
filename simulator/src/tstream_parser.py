@@ -37,7 +37,7 @@ def parse_list(stream, parser):
         assert get_char(stream) == '2'
         length = parse_number(stream) + 2
         return [parser(stream) for _ in range(length)]
-    assert False
+    assert False, c
 
 # cars
     

@@ -18,7 +18,7 @@ def fuel_to_stream(fuel):
     
     q = []
     for f in fuel:
-        q.append(list(map(list,f)))
+        q.append(list(map(list,f.transpose())))
     
     result = compose_matrices(q)
     assert all(c in '012' for c in result)
