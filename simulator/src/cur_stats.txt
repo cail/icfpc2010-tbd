@@ -1,4 +1,5 @@
-Score:  83.876   
+Rank:  28
+Score:  90.370
 Solved:  171
 Submitted:  0
 
