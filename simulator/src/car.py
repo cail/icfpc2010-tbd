@@ -3,14 +3,27 @@ from collections import namedtuple
 
 from numpy import dot, array, ndarray
 
+from tstream_parser import parse_chambers
+from tstream_composer import compose_matrices
 
 __all__ = [
     'Car',
     'Chamber',
+    'fuel_to_stream',
 ]
 
-Chamber = namedtuple('Chamber', 'upper lower')
+def fuel_to_stream(fuel):
+    if not isinstance(fuel[0], ndarray):
+        fuel = [array([[f]]) for f in fuel]
+    
+    q = []
+    for f in fuel:
+        q.append(list(map(list,f)))
+    
+    return compose_matrices(q)
+    
 
+Chamber = namedtuple('Chamber', 'upper lower')
 
 class Car(object):
     # ***_chamers is list of Chambers
@@ -24,11 +37,26 @@ class Car(object):
         ]
 
     @staticmethod
-    def from_stream(self, s):
-        raise NotImplementedError()
+    def from_stream(s):
+        chambers = parse_chambers(iter(s))
+        car = Car(0)
+        t = 0
+        for flag, up, low in chambers:
+            t = max([t]+up+low)
+            if flag == 0:
+                car.main_chambers.append(Chamber(up, low))
+            elif flag == 1:
+                car.aux_chambers.append(Chamber(up, low))
+            else:
+                assert False
+        car.num_tanks = t+1
+        return car
     
     def to_stream(self):
         raise NotImplementedError()
+    
+    def __str__(self):
+        return "Car(%s, %s, %s)"%(self.num_tanks, self.main_chambers, self.aux_chambers)
 
     def __init__(self, num_tanks):
         self.num_tanks = num_tanks
@@ -48,7 +76,7 @@ class Car(object):
                 return False
         return True
 
-    def test_on_fuel(self, fuel, num_tests=100):
+    def test_on_fuel(self, fuel, num_tests=1000):
         """
         fuel is list of either numpy 2d arrays or just integers (for 1d case)
         """
@@ -96,3 +124,10 @@ def test_chamber_on_input(chamber, fuel, input, main):
     
     return all(up >= lo for up, lo in zip(upper, lower)) and \
         (not main or upper[0] > lower[0])
+
+
+if __name__ == '__main__':
+    car = Car.from_stream('122221001200000000000000000000010')
+    
+    print car
+    
