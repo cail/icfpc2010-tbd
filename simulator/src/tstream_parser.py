@@ -38,6 +38,8 @@ def parse_list(stream, parser):
         length = parse_number(stream) + 2
         return [parser(stream) for _ in range(length)]
     assert False
+
+# cars
     
 def parse_type(stream):
     t = parse_number(stream)
@@ -52,12 +54,25 @@ def parse_chamber(stream):
 
 def parse_end(stream):
     try:
-        get_char(stream)
+        c = get_char(stream)
     except StopIteration:
         return
-    assert False
+    assert False, 'Leftovers: ' + (c + ''.join(stream))
 
 def parse_chambers(stream):
     chambers = parse_list(stream, parse_chamber)
     parse_end(stream)
     return chambers
+
+# fuels
+
+def parse_row(stream):
+    return parse_list(stream, parse_number)
+
+def parse_matrix(stream):
+    return parse_list(stream, parse_row)
+
+def parse_matrices(stream):
+    res = parse_list(stream, parse_matrix)
+    parse_end(stream)
+    return res

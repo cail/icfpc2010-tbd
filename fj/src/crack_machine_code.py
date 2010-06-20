@@ -3,7 +3,7 @@ import time
 import re
 from pprint import pprint
 from itertools import ifilter
-from tstream_parser import parse_number, parse_chambers
+from tstream_parser import parse_number, parse_chambers, parse_matrices
 from tstream_composer import compose_number, compose_row, compose_matrix, compose_matrices
 
 from submit_car import submit_car as submit_car_orig
@@ -75,9 +75,13 @@ def test_compose_number():
 
 test_parse_number()
 test_compose_number()
-pprint(parse_chambers(clean_stream('1222210000000000000000000010')))
-pprint(compose_row([2]))
+#pprint(parse_chambers(clean_stream('')))
 
-pprint(compose_matrices([[[2]]]))
+s = compose_matrices([[[1, 1],
+       [0, 0]], [[1, 0],
+       [0, 0]], [[1, 1],
+       [0, 0]]])
+print len(s), s
 
 #print submit_car(new, fuel)
+print parse_matrices(iter('22102202201011220002202201002200022022010022000'))
