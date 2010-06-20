@@ -261,9 +261,7 @@ def reduce_problem(outputs):
     postprocessor = 2
     num_layers = 7
     
-    fast_params = \
-        [(1,i) for i in range(16,8,-2)]+\
-        [(2,i) for i in range(14,8,-2)]
+    fast_params = [(1,10),(2,10),(2,6)]
     
     if len(outputs) > 120:
         fast_params = [(1,10), (2,10), (2,8), (2,6), (2,5), (2,4)]
