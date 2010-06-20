@@ -1,11 +1,13 @@
 from pprint import pprint
 import csv
+from random import shuffle
+from multiprocessing import Pool, TimeoutError
 
 
 from car import Car, fuel_to_stream
 from scheme_as_sat import generate_scheme_for_fuel
 from find_fuel import find_fuel_stream
-from submit_fuel import submit_fuel
+from submit_fuel import submit_fuel, login
     
 
 def solve(car_string):
@@ -22,7 +24,7 @@ def solve(car_string):
     
     print len(suffix), suffix
     
-    if len(suffix) > 50:
+    if len(suffix) > 35:
         print 'skip'
         return
     
@@ -41,9 +43,14 @@ def solve(car_string):
 if __name__ == '__main__':
     
     data = csv.reader(open('../data/car_data'))
+    data = list(data)
+    
+    shuffle(data)
     
     total = 0
     solved = 0
+    
+    browser = None
     
     for line in data:
         if line == []:
@@ -60,12 +67,20 @@ if __name__ == '__main__':
         print car_no
         result = solve(stream)
         if result is not None:
-            print submit_fuel(car_no, result)
+            if browser is None:
+                print 'login',
+                browser = login()
+                print 'ok'
+                
+            print 'submitting...'
+            print submit_fuel(car_no, result, br=browser)
+            
             solved += 1
             
         print 'solved ', solved, '/', total
         
+        
             
-    print 'solved ', solved, '/', total
+    print 'finally solved ', solved, '/', total
+   
     
-    pass

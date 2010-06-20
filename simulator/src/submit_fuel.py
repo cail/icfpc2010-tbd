@@ -18,8 +18,9 @@ def login():
     br.submit()
     return br
 
-def raw_submit_fuel(car, fuel):
-    br = login()
+def raw_submit_fuel(car, fuel, br=None):
+    if br is None:
+        br = login()
     
     res = br.open("http://icfpcontest.org/icfp10/instance/{0}/solve/form".format(car))
     
@@ -58,9 +59,8 @@ def save_cache():
         print >> cache_file, "# car: scheme"
         pprint(cache, stream=cache_file)
 
-load_cache()
 
-def submit_fuel(car, fuel):
+def submit_fuel(car, fuel, br=None):
     car = int(car)
     
     assert car != 219
@@ -76,16 +76,18 @@ def submit_fuel(car, fuel):
             print 'shorter solution was already submitted'
         return 'cached'
         
-    result = raw_submit_fuel(car, fuel)
+    result = raw_submit_fuel(car, fuel, br)
     if result.find('You have already submitted this solution') != -1:
         cache[car] = fuel
         save_cache()
         assert False, result
         
     assert result.find('Good!') != -1, result
+    load_cache()
     cache[car] = fuel
     save_cache()
     return result
+
 
 def list_cars():
 

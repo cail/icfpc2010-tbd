@@ -349,12 +349,13 @@ def save_cache():
         print>>cache_file, "# (suffix): scheme"
         pprint(cache, stream=cache_file)
 
-load_cache()
 
 def cached_generate_scheme(outputs):
-    if USE_CACHE and tuple(outputs) in cache:
-        logging.info('using cached results')
-        return Scheme.load(cache[tuple(outputs)].split("\n"))
+    if USE_CACHE:
+        load_cache()
+        if tuple(outputs) in cache:
+            logging.info('using cached results')
+            return Scheme.load(cache[tuple(outputs)].split("\n"))
     
     result = generate_scheme(outputs)
     assert result.eval((server_inputs+[2]*1000)[:len(outputs)]) == outputs
