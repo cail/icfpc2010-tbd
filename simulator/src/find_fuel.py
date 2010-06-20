@@ -3,6 +3,7 @@ from pprint import pprint
 from car import fuel_to_stream
 from solve_brute_force import solve_brute_force
 from solve_lp import solve_LP
+from solve_mc import solve_monte_carlo
 
 USE_CACHE = True
 # set it to false if you improve solver and want to calculate better solutions
@@ -11,6 +12,7 @@ USE_CACHE = True
 
 def find_fuel(car):
     for f in [solve_brute_force, solve_LP]:
+        print f
 #    for f in [solve_brute_force]:
         fuel = f(car)
         if fuel is not None:
