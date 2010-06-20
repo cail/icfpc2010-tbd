@@ -226,7 +226,7 @@ if __name__ == '__main__':
                         if len(c) < 2:
                             continue
                         if int(c[0]) == int(car):
-                            car = c[1]
+                            car = c[1].strip()
                             break
                     print car
                 

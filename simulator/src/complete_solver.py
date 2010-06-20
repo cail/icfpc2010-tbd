@@ -160,9 +160,10 @@ if __name__ == '__main__':
             #    print 'ok'
                 
             if testonly:
-                print submit_test_car_fuel(stream, result)
-                #if success:
-                open('test_data', 'a').write("{0}\n{1}", car_no, result)
+                tres = submit_test_car_fuel(stream, result)
+                print tres
+                if tres.find('Good!') != -1:
+                    open('test_data', 'a').write("car:{0}\n{1}\n\n".format(car_no, result))
             else:
                 print submit_fuel(car_no, result, br=browser)
             
