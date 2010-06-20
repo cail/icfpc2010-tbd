@@ -157,6 +157,7 @@ if __name__ == '__main__':
                 
             if testonly:
                 tres = submit_test_car_fuel(stream, result)
+                print tres
                 if tres.find('Good!') != -1:
                     fout = open('test_data', 'a')
                     fout.write(repr((car_no, result)))
