@@ -119,6 +119,8 @@ class Scheme(object):
 
     def __str__(self):
         self.validate()
+        if self.num_nodes == 0:
+            return 'X::X'
         result = []
         result.append(self.to['X']+':')
         for i in range(self.num_nodes):
