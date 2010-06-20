@@ -1,6 +1,6 @@
 from time import clock
 from random import random
-from pprint import pprint
+from pprint import pprint, pformat
 
 from sat_solver import *
 from scheme import *
@@ -345,8 +345,8 @@ def save_cache():
     global cache
     with open(CACHE_FILE,'wt') as cache_file: 
         print>>cache_file, "# (suffix): scheme"
-        pprint(cache, stream=cache_file)
-
+        dump = pformat(cache).replace("{", "{\n").replace("}", "\n}")
+        print >> cache_file, dump
 
 def cached_generate_scheme(outputs):
     if USE_CACHE:
