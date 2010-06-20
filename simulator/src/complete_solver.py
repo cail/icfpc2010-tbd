@@ -162,7 +162,8 @@ if __name__ == '__main__':
                 fout.write(repr((car_no, result)))
                 fout.close()
             else:
-                if browser is None:
+                if False and browser is None:
+                    # disabled because there is a risk of timeout
                     print 'login',
                     browser = login()
                     print 'ok'
