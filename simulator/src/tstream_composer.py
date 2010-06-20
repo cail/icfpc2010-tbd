@@ -1,5 +1,3 @@
-import sys
-
 def encode_base3(n, digits):
     acc = []
     for _ in range(digits):
@@ -33,6 +31,7 @@ def compose_list(lst, composer):
                 compose_number(length - 2) + 
                 ''.join(composer(i) for i in lst))
 
+# fuel
 def compose_row(row):
     return compose_list(row, compose_number)
 
@@ -41,3 +40,18 @@ def compose_matrix(matrix):
     
 def compose_matrices(matrices):
     return compose_list(matrices, compose_matrix)
+
+# car
+def compose_type(t):
+    assert t in [0, 1]
+    return compose_number(t)
+    
+def compose_chamber(chamber):
+    assert len(chamber) == 3
+    l1 = compose_list(chamber[1], compose_number)
+    t  = compose_type(chamber[0])
+    l2 = compose_list(chamber[2], compose_number)
+    return l1 + t + l2
+
+def compose_chambers(chambers):
+    return compose_list(chambers, compose_chamber)
