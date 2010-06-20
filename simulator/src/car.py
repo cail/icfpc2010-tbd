@@ -90,7 +90,7 @@ class Car(object):
             assert all(f.shape == (n, n) for f in fuel)
         else:
             n = 1
-            assert all(isinstance(f, int) for f in fuel)
+            assert all(isinstance(f, (int, long)) for f in fuel), fuel
 
         if n == 1:
             # that's enough to ensure validity of the fuel

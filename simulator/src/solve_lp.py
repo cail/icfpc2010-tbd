@@ -21,6 +21,8 @@ def solve_LP(car):
         
         #assert len(term) != 0, 'pipes are equivalent'
         if len(term) == 0:
+            if isMain:
+                return # we don't know how to deal with it
             continue
         
         if isMain:
@@ -29,6 +31,8 @@ def solve_LP(car):
             problem += term >= 0
     
     result = problem.solve(GLPK(msg=False))
+    #print problem
+    #print map(value,vars)
     
     if result != LpStatusOptimal:
         #print problem
