@@ -61,7 +61,7 @@ if __name__ == '__main__':
         id, sup = line
         suppliers[int(id)] = int(sup)
 
-    skipsubmitted = True
+    skipsubmitted = False
     start_with = None
     minsuppliers = 0
     maxsuppliers = 1000
@@ -154,16 +154,18 @@ if __name__ == '__main__':
             # store it temporary for debuggin
             open('temp_solution', 'w').write(result)
 
-            #if browser is None:
-            #    print 'login',
-            #    browser = login()
-            #    print 'ok'
                 
             if testonly:
                 print submit_test_car_fuel(stream, result)
                 #if success:
-                open('test_data', 'a').write("{0}\n{1}", car_no, result)
+                fout = open('test_data', 'a')
+                fout.write(repr((car_no, result)))
+                fout.close()
             else:
+                if browser is None:
+                    print 'login',
+                    browser = login()
+                    print 'ok'
                 print submit_fuel(car_no, result, br=browser)
             
             solved += 1
