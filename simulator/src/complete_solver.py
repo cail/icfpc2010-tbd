@@ -14,6 +14,8 @@ from submit_fuel import submit_fuel, login
     
 VERBOSE = True
 
+max_suffix = 40
+
 def solve(car_string):
     assert car_string.strip() != '0'
     
@@ -29,7 +31,7 @@ def solve(car_string):
     
     print len(suffix), suffix
     
-    if len(suffix) > 40:
+    if len(suffix) > max_suffix:
         print 'skip'
         return
     
@@ -47,7 +49,7 @@ def solve(car_string):
 
 if __name__ == '__main__':
     
-    print "Usage options: skipsubmitted | startwith <carno> "
+    print "Usage options: skipsubmitted | startwith <carno> | maxsuffix <no> | minsuppliers <no> | maxsuppliers <no> | sortbycarsize"
     
     data = csv.reader(open('../data/car_ids'))
     data = list(data)
@@ -61,11 +63,23 @@ if __name__ == '__main__':
 
     skipsubmitted = False
     start_with = None
+    minsuppliers = 0
+    maxsuppliers = 1000
+    sortbycarsize = False
     for i, v in enumerate(sys.argv):
         if v == 'skipsubmitted':
             skipsubmitted = True
         if v == 'startwith':
             start_with = int(sys.argv[i+1])
+        if v == 'maxsuffix':
+            max_suffix = int(sys.argv[i+1])
+        if v == 'minsuppliers':
+            minsuppliers = int(sys.argv[i+1])
+        if v == 'maxsuppliers':
+            maxsuppliers = int(sys.argv[i+1])
+        if v == 'sortbycarsize':
+            sortbycarsize = True
+            
 
     submittedcars = set()
     if skipsubmitted:
@@ -94,9 +108,18 @@ if __name__ == '__main__':
         if car_no in submittedcars:
             continue
         
+        if suppliers[car_no] < minsuppliers:
+            continue
+        if suppliers[car_no] > maxsuppliers:
+            continue
+        
         tasks.append((car_no,suppliers[car_no],stream))
-
-    tasks.sort(key = lambda (n, sup, s): (sup, random()*0.01))
+    
+    
+    if sortbycarsize:
+        tasks.sort(key = lambda (n, sup, s): (sup, len(s)))
+    else:
+        tasks.sort(key = lambda (n, sup, s): (sup, random()*0.01))
     
     if start_with:
         start_idx = 0
