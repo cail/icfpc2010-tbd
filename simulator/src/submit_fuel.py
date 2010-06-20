@@ -2,6 +2,7 @@ import re
 import mechanize
 import sys
 import time
+import csv
 from pprint import pprint, pformat
 from submit_car import PASSWD, USER
 from mechanize._beautifulsoup import BeautifulSoup, BeautifulStoneSoup
@@ -47,6 +48,34 @@ def raw_submit_fuel(car, fuel, br=None):
         return mpre.group(1)
     else:
         return "OK " + body
+
+
+def submit_test_car_fuel(cardata, fuel):
+
+    br = mechanize.Browser()
+    
+    #br.set_response()
+    res = br.open("http://nfa.imn.htwk-leipzig.de/icfpcont/")
+    #res = br.post("http://nfa.imn.htwk-leipzig.de/icfpcont/")
+    
+    br.select_form(nr=0)
+        
+    br["G0"] = cardata
+    br["G1"] = fuel
+
+    response = br.submit()
+    
+    body = response.read()
+#    print body
+    bs = BeautifulSoup(body)
+    
+    result = ''
+    for pre in bs.fetch('pre'):
+        result += pre.renderContents()
+    
+    return result
+
+
 
 CACHE_FILE = '../data/submitted_solutions.txt'
 
@@ -171,6 +200,7 @@ if __name__ == '__main__':
     
     if len(sys.argv) < 2:
         print "use <vehicleid> <fuelfile or ->"
+        print "or test <vehicledata> <fuelfile or -> (for test submits)"
         print "or listcars"
         print "or loadcars"
          
@@ -186,13 +216,28 @@ if __name__ == '__main__':
                 load_cars()
 
         else:
-            vehicle = sys.argv[1]
-            fuel = sys.argv[2]
-            
-            fuel = open(fuel).read()
-            
-            result = submit_fuel(vehicle, fuel)
-            
+            if sys.argv[1] == 'test':
+                car = sys.argv[2]
+                if len(car) < 6:
+                    data = csv.reader(open('../data/car_data'))
+                    data = list(data)
+                    for c in data:
+                        if len(c) < 2:
+                            continue
+                        if int(c[0]) == int(car):
+                            car = c[1]
+                            break
+                    print car
+                
+                fuel = sys.argv[3]
+                fuel = open(fuel).read()
+                result = submit_test_car_fuel(car, fuel)
+            else:
+                vehicle = sys.argv[1]
+                fuel = sys.argv[2]
+                fuel = open(fuel).read()
+                result = submit_fuel(vehicle, fuel)
+                
             print
             print result
             print 
