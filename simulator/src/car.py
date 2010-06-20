@@ -60,6 +60,9 @@ class Car(object):
         car.num_tanks = t+1
         return car
     
+    def length(self):
+        return sum(len(ch.upper)+len(ch.lower) for ch, _ in self.all_chambers())
+    
     def to_stream(self):
         raise NotImplementedError()
     

@@ -11,7 +11,7 @@ USE_CACHE = False
 
 
 solve_monte_carlo_size2 = partial(solve_monte_carlo, size=2) 
-solve_monte_carlo_size3 = partial(solve_monte_carlo, size=3, attempts=2000) 
+solve_monte_carlo_size3 = partial(solve_monte_carlo, size=3) 
 
 def find_fuel(car):
     best = None
