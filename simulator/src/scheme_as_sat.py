@@ -366,6 +366,8 @@ def cached_generate_scheme(outputs):
     if q is None or len(q) > len(s):
         cache[tuple(outputs)] = s
         save_cache()
+    else:
+        return cache[tuple(outputs)]
     
     return result
     
