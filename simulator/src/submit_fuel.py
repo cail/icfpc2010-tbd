@@ -99,10 +99,9 @@ def submit_fuel(car, fuel, br=None):
 
 
 def list_cars():
-
-    br = login()
-            
-    response = br.follow_link(text_regex=r".*Submit fuel.*")
+    br = mechanize.Browser()
+    response = br.open("http://icfpcontest.org/icfp10/score/instanceTeamCount")
+    assert br.viewing_html()
     body = response.read()
     
     #print body
