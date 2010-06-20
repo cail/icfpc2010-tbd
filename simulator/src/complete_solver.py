@@ -142,7 +142,10 @@ if __name__ == '__main__':
     
     for car_no, sup, stream in tasks:
         
-        print "CAR #",car_no,'   ',sup,'suppliers'
+        if sup == 1:
+            continue
+        
+        print "CAR #", car_no, '   ', sup, 'suppliers'
         total += 1
         result = solve(stream)
         if result is not None:
