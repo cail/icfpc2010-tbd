@@ -70,6 +70,7 @@ class Scheme(object):
             scheme.connect(rightIn, str(i)+'R')
         
         assert str(scheme).replace('\n','') == text
+        scheme.validate()
         return scheme
     
     @staticmethod
@@ -80,7 +81,15 @@ class Scheme(object):
             scheme.add_node(i, 0)
         for to, fr in enumerate(from_):
             scheme.connect(pins[fr], pins[to])
+        scheme.validate()
         return scheme
+    
+    def validate(self):
+        pins = set(pin_names(self.num_nodes))
+        assert set(self.from_) == pins
+        assert set(self.to) == pins
+        
+        assert set(self.from_.items()) == set((v,k) for k,v in self.to.items())
     
     def get_permutation(self):
         pins = pin_names(self.num_nodes)
@@ -109,6 +118,7 @@ class Scheme(object):
         self.from_[pin2] = pin1
 
     def __str__(self):
+        self.validate()
         result = []
         result.append(self.to['X']+':')
         for i in range(self.num_nodes):
@@ -123,6 +133,28 @@ class Scheme(object):
         result.append(self.from_['X'])
         
         return '\n'.join(result)
+    
+    def append(self, other):
+        d = self.num_nodes
+        for i in range(other.num_nodes):
+            self.add_node(i+d, other.function[i])
+        
+        my_output = self.from_['X']
+        
+        for to, fr in other.from_.items():
+            if fr == 'X':
+                fr = my_output
+            else:
+                n, side = parse_pin(fr) 
+                fr = '%s%s'%(n+d, side)
+            if to == 'X':
+                pass
+            else:
+                n, side = parse_pin(to) 
+                to = '%s%s'%(n+d, side)
+                
+            self.connect(fr, to)
+        self.validate()    
     
     def naive_eval(self, inputs):
         result = []
