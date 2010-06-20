@@ -7,7 +7,7 @@ from submit_car import PASSWD, USER
 from mechanize._beautifulsoup import BeautifulSoup, BeautifulStoneSoup
 
 # if true, makes assertions on fuel errors
-FAIL_ON_ASSERT = True
+FAIL_ON_ASSERT = False
 
 def login():
     br = mechanize.Browser()
@@ -83,10 +83,13 @@ def submit_fuel(car, fuel, br=None):
     if result.find('You have already submitted this solution') != -1:
         cache[car] = fuel
         save_cache()
-        #assert False, result
+        if FAIL_ON_ASSERT:
+            assert False, result
         return result
-    if FAIL_ON_ASSERT:
-        assert result.find('Good!') != -1, result
+
+    if result.find('Good!') != -1:
+        if FAIL_ON_ASSERT:
+            assert False, result
     else:
         load_cache()
         cache[car] = fuel
