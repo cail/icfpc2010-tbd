@@ -101,7 +101,8 @@ class Car(object):
         for i in range(n):
             input = [0 for i in range(n)]
             input[0] = 1
-            input[i] = 1
+            if i > 0:
+                input[i] = 10**10
             if not self.test_on_input(fuel, input):
                 return False
         return True
