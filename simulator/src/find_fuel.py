@@ -5,7 +5,7 @@ from solve_brute_force import solve_brute_force
 from solve_lp import solve_LP
 from solve_mc import solve_monte_carlo
 
-USE_CACHE = False
+USE_CACHE = True
 # set it to false if you improve solver and want to calculate better solutions
 
 
@@ -14,7 +14,7 @@ def find_fuel(car):
     best = None
     best_len = 1e100
     
-    for f in [solve_brute_force, solve_monte_carlo, solve_LP]:
+    for f in [solve_brute_force, solve_LP]:
         print f.__name__,
         fuel = f(car)
         if fuel is not None:

@@ -20,7 +20,9 @@ def fuel_to_stream(fuel):
     for f in fuel:
         q.append(list(map(list,f)))
     
-    return compose_matrices(q)
+    result = compose_matrices(q)
+    assert all(c in '012' for c in result)
+    return result
     
 
 Chamber = namedtuple('Chamber', 'upper lower')
