@@ -120,12 +120,16 @@ if __name__ == '__main__':
         total += 1
         result = solve(stream)
         if result is not None:
-            if browser is None:
-                print 'login',
-                browser = login()
-                print 'ok'
+            print 'submitting: '
+            
+            # store it temporary for debuggin
+            open('temp_solution', 'w').write(result)
+
+            #if browser is None:
+            #    print 'login',
+            #    browser = login()
+            #    print 'ok'
                 
-            print 'submitting...'
             print submit_fuel(car_no, result, br=browser)
             
             solved += 1
