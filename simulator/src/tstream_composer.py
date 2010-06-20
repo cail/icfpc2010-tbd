@@ -24,18 +24,14 @@ def compose_number(n):
     # wtf?
     assert False
     
-def compose_list_many(lst, composer):
-    length = len(lst)
-    assert length >= 2
-    return ('2' +
-            compose_number(length - 2) + 
-            ''.join(composer(i) for i in lst))
-
 def compose_list(lst, composer):
     length = len(lst)
     if   length == 0: return '0'
     elif length == 1: return '1' + composer(lst[0])
-    else:             return '2' + compose_list_many(lst, composer)
+    else:             
+        return ('22' + 
+                compose_number(length - 2) + 
+                ''.join(composer(i) for i in lst))
 
 def compose_row(row):
     return compose_list(row, compose_number)

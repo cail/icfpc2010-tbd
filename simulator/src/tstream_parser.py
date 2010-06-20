@@ -29,18 +29,14 @@ def parse_number(stream):
     p = sum(3**i for i in range(len(lst)))
     return p + n
     
-def parse_list_many(stream, parser):
-    c = get_char(stream)
-    assert c == '2'
-    length = parse_number(stream) + 2
-    return [parser(stream) for _ in range(length)]
-
 def parse_list(stream, parser):
     c = get_char(stream)
     if   c == '0': return []
     elif c == '1': return [parser(stream)]
     elif c == '2':
-        return parse_list_many(stream, parser)
+        assert get_char(stream) == '2'
+        length = parse_number(stream) + 2
+        return [parser(stream) for _ in range(length)]
     assert False
     
 def parse_type(stream):
@@ -56,8 +52,8 @@ def parse_chamber(stream):
 
 def parse_end(stream):
     try:
-        get_char()
-    except:
+        get_char(stream)
+    except StopIteration:
         return
     assert False
 
