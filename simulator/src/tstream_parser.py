@@ -24,15 +24,10 @@ def parse_digit(stream):
     return int(c)
 
 def parse_number(stream):
-    c = get_char(stream)
-    if   c == '0': return 0
-    elif c == '1': return parse_digit(stream) + 1
-    elif c == '2':
-        lst = parse_list_many(stream, parse_digit)
-        n = decode_base3(lst)
-        p = sum(3**i for i in range(len(lst)))
-        return p + n
-    assert False
+    lst = parse_list(stream, parse_digit)
+    n = decode_base3(lst)
+    p = sum(3**i for i in range(len(lst)))
+    return p + n
     
 def parse_list_many(stream, parser):
     c = get_char(stream)
