@@ -6,5 +6,5 @@ def solve_brute_force(car, limit=3):
     
     for fuel in fuels:
         if car.test_on_fuel(fuel):
-            return fuel
+            return list(fuel)
     
