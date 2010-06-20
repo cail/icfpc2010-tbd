@@ -1,6 +1,6 @@
 from pprint import pprint
 import csv
-from random import shuffle
+from random import shuffle, random
 from multiprocessing import Pool, TimeoutError
 
 
@@ -24,7 +24,7 @@ def solve(car_string):
     
     print len(suffix), suffix
     
-    if len(suffix) > 35:
+    if len(suffix) > 40:
         print 'skip'
         return
     
@@ -70,7 +70,7 @@ if __name__ == '__main__':
         
         tasks.append((car_no,suppliers[car_no],stream))
 
-    tasks.sort(key = lambda (n, sup, s): (sup, len(s)))
+    tasks.sort(key = lambda (n, sup, s): (sup, random()*0.01))
     
     total = 0
     solved = 0
