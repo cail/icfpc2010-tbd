@@ -2,6 +2,7 @@ import re
 import mechanize
 import sys
 import time
+from pprint import pprint
 from submit_car import PASSWD, USER
 from mechanize._beautifulsoup import BeautifulSoup, BeautifulStoneSoup
 
@@ -17,8 +18,7 @@ def login():
     br.submit()
     return br
 
-def submit_fuel(car, fuel):
-
+def raw_submit_fuel(car, fuel):
     br = login()
     
     res = br.open("http://icfpcontest.org/icfp10/instance/{0}/solve/form".format(car))
@@ -29,11 +29,11 @@ def submit_fuel(car, fuel):
 
     response = br.submit()
     
-    body =  response.read()
+    body = response.read()
 #    print body
     
-    re_spanerr = re.compile(r"class=\"errors\"\>(.*?)\<\/span\>", re.S+re.M)
-    re_pre = re.compile(r"\<pre\>(.*?)\</pre\>", re.S+re.M)
+    re_spanerr = re.compile(r"class=\"errors\"\>(.*?)\<\/span\>", re.S + re.M)
+    re_pre = re.compile(r"\<pre\>(.*?)\</pre\>", re.S + re.M)
 
     mpre = re_pre.search(body)
     mspan = re_spanerr.search(body)
@@ -44,6 +44,48 @@ def submit_fuel(car, fuel):
         return mpre.group(1)
     else:
         return "OK " + body
+
+CACHE_FILE = '../data/submitted_solutions.txt'
+
+def load_cache():
+    global cache
+    with open(CACHE_FILE) as cache_file:
+        cache = eval(cache_file.read())
+        
+def save_cache():
+    global cache
+    with open(CACHE_FILE, 'wt') as cache_file: 
+        print >> cache_file, "# car: scheme"
+        pprint(cache, stream=cache_file)
+
+load_cache()
+
+def submit_fuel(car, fuel):
+    car = int(car)
+    
+    assert car != 219
+    
+    load_cache()
+    if car in cache and len(fuel) >= len(cache[car]):
+        if fuel == cache[car]:
+            print 'this solution was already submitted'
+        elif len(fuel) == len(cache[car]):
+            print 'equivalent solution was already submitted'
+        else:
+            assert len(fuel) > len(cache[car])
+            print 'shorter solution was already submitted'
+        return 'cached'
+        
+    result = raw_submit_fuel(car, fuel)
+    if result.find('You have already submitted this solution') != -1:
+        cache[car] = fuel
+        save_cache()
+        assert False, result
+        
+    assert result.find('Good!') != -1, result
+    cache[car] = fuel
+    save_cache()
+    return result
 
 def list_cars():
 
@@ -69,7 +111,7 @@ def list_cars():
         m = re.search(r"\/(\d+)\/", id)
         id = m.group(1)
         
-        ids.append( (id, suppliers))
+        ids.append((id, suppliers))
     return ids
     
     
@@ -108,13 +150,14 @@ def load_cars():
             continue
         sys.stderr.write("fetching '{0}' of {1}\n".format(c, len(cars)))
         cardata = get_cardata(br, c)
-        allcardata.append( (c, cardata) )
+        allcardata.append((c, cardata))
         print "{0}, {1}".format(c, cardata)
         time.sleep(2)
     return
         
             
 if __name__ == '__main__':
+    
     if len(sys.argv) < 2:
         print "use <vehicleid> <fuelfile or ->"
         print "or listcars"
@@ -123,7 +166,7 @@ if __name__ == '__main__':
         if len(sys.argv) == 2:
 
             if sys.argv[1] == 'listcars':
-                list =  list_cars()
+                list = list_cars()
                 for item in list:
                     print "{0}, {1}".format(item[0], item[1])
     
