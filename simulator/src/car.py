@@ -14,11 +14,11 @@ __all__ = [
 
 def fuel_to_stream(fuel):
     if not isinstance(fuel[0], ndarray):
-        fuel = [array([[f]]) for f in fuel]
+        fuel = [array([[f]], dtype=object) for f in fuel]
     
     q = []
     for f in fuel:
-        q.append(list(map(list,f)))
+        q.append(list(map(list,f.transpose())))
     
     result = compose_matrices(q)
     assert all(c in '012' for c in result)
@@ -115,9 +115,9 @@ def pipe_function(pipe, fuel, input):
         for section in pipe:
             x *= fuel[section]
         return [x]
-    
+
     if not isinstance(input, ndarray):
-        input = array(input, dtype=int)
+        input = array(input, dtype=object)
         
     for section in pipe:
         input = dot(fuel[section], input)

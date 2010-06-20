@@ -9,7 +9,7 @@ def solve_monte_carlo(car, size=2, attempts=5000):
     best = None
     best_len = 1e100
     
-    fuel = [zeros((size,size), dtype=int) for i in range(car.num_tanks)]
+    fuel = [zeros((size,size), dtype=object) for i in range(car.num_tanks)]
     
     for attempt in xrange(attempts):
         for i in range(car.num_tanks):
