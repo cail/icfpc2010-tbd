@@ -1,5 +1,6 @@
 from pprint import pprint
 import csv
+import sys
 from random import shuffle
 from multiprocessing import Pool, TimeoutError
 
@@ -9,12 +10,15 @@ from scheme_as_sat import generate_scheme_for_fuel
 from find_fuel import find_fuel_stream
 from submit_fuel import submit_fuel, login
     
+    
+VERBOSE = True
 
 def solve(car_string):
     assert car_string.strip() != '0'
     
     car = Car.from_stream(car_string.strip())
-    print car
+    if VERBOSE:
+        print car
     
     suffix = find_fuel_stream(car)
     
@@ -71,7 +75,21 @@ if __name__ == '__main__':
         tasks.append((car_no,suppliers[car_no],stream))
 
     tasks.sort(key = lambda (n, sup, s): (sup, len(s)))
-    
+
+    start_with = None
+    if len(sys.argv) > 1:
+        start_with = int(sys.argv[1])
+        
+    if start_with:
+        start_idx = 0
+        for i, id in enumerate(tasks):
+            if id[0] == start_with:
+                start_idx = i
+                break
+        tasks = tasks[start_idx:] 
+        print "skipping first {0} elements".format(start_idx)
+
+  
     total = 0
     solved = 0
     
@@ -81,7 +99,6 @@ if __name__ == '__main__':
         
         print "CAR #",car_no,'   ',sup,'suppliers'
         total += 1
-        print car_no
         result = solve(stream)
         if result is not None:
             if browser is None:
