@@ -73,6 +73,9 @@ def submit_test_car_fuel(cardata, fuel):
     for pre in bs.fetch('pre'):
         result += pre.renderContents()
     
+    if FAIL_ON_SUBMISSION_ERROR:
+        assert result.find('Good!') != -1, result
+    
     return result
 
 
