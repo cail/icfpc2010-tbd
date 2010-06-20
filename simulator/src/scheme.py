@@ -1,5 +1,5 @@
 import re
-
+from collections import defaultdict
 
 __all__ = [
     'pin_names',
@@ -102,7 +102,7 @@ class Scheme(object):
         self.num_nodes = 0
         self.to = {}
         self.from_ = {}
-        self.function = {}
+        self.function = defaultdict(lambda:0)
         
     def add_node(self, n, fn):
         self.num_nodes = max(self.num_nodes, n+1)
@@ -176,6 +176,7 @@ class Scheme(object):
         return result
     
     def eval(self, inputs):
+        self.validate()
         result = eval_scheme(self.get_permutation(), inputs)
         assert result == self.naive_eval(inputs)
         return result
