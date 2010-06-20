@@ -5,6 +5,7 @@ __all__ = [
     'pin_names',
     'gate_values',
     'gate_function',
+    'gate_dict',
     'Scheme',
     'eval_scheme',
     'eval_scheme_and_compare',
@@ -30,9 +31,12 @@ gate_values =\
     [(2,2),(1,1),(0,0)]],
 ] 
 
+
 def gate_function(fn, left, right):
     return gate_values[fn][left][right]
 
+gate_dict = dict(((left, right), gate_function(0, left, right))
+                 for left in range(3) for right in range(3))
 
 class Scheme(object):
     __slots__ = [
@@ -198,5 +202,6 @@ if __name__ == '__main__':
     print sch
     
     outputs = list(sch.eval(inputs))
+    assert outputs == key
     print 'in ',''.join(map(str, inputs))
     print 'out',''.join(map(str, outputs))
