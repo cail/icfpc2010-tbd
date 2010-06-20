@@ -34,12 +34,15 @@ class Car(object):
         'num_tanks',
         'main_chambers',
         'aux_chambers',
+        'representation',
         ]
 
     @staticmethod
     def from_stream(s):
-        chambers = parse_chambers(iter(s))
+        assert isinstance(s,basestring)
         car = Car(0)
+        car.representation = s
+        chambers = parse_chambers(iter(s))
         t = 0
         for flag, up, low in chambers:
             t = max([t]+up+low)
@@ -56,7 +59,7 @@ class Car(object):
         raise NotImplementedError()
     
     def __str__(self):
-        return "Car(%s, %s, %s)"%(self.num_tanks, self.main_chambers, self.aux_chambers)
+        return "Car(%s,\n  %s,\n  %s)"%(self.num_tanks, self.main_chambers, self.aux_chambers)
 
     def __init__(self, num_tanks):
         self.num_tanks = num_tanks

@@ -3,36 +3,28 @@ import csv
 
 
 from car import Car, fuel_to_stream
-from solve_brute_force import solve_brute_force
-from solve_lp import solve_LP
 from scheme_as_sat import generate_scheme_for_fuel
-
-
-
-def find_fuel(car):
-    for f in [solve_brute_force, solve_LP]:
-#    for f in [solve_brute_force]:
-        fuel = f(car)
-        if fuel is not None:
-            print 'solved with', f
-            return fuel
-
+from find_fuel import find_fuel_stream
+from submit_fuel import submit_fuel
+    
 
 def solve(car_string):
+    assert car_string.strip() != '0'
+    
     car = Car.from_stream(car_string.strip())
     print car
     
-    fuel = find_fuel(car)
+    suffix = find_fuel_stream(car)
     
-    if fuel is None:
+    if suffix is None:
         print 'fail'
         return
     
-    pprint(fuel) 
-    assert car.test_on_fuel(fuel)
-    
-    suffix = fuel_to_stream(fuel)
     print len(suffix), suffix
+    
+    if len(suffix) > 120:
+        print 'skip'
+        return
     
     suffix = map(int, suffix)
 
@@ -58,25 +50,22 @@ if __name__ == '__main__':
             continue
         
         car_no, stream = line
+        car_no = int(car_no)
         
-        if car_no == '219':
+        if car_no == 219:
             continue
-
+        
         total += 1
         
         print car_no
         result = solve(stream)
         if result is not None:
+            print submit_fuel(car_no, result)
             solved += 1
             
         print 'solved ', solved, '/', total
+        
             
     print 'solved ', solved, '/', total
-    #s = solve('12222000000000010')
-    #print s
-    
-    
-    
-    #print scheme
     
     pass
