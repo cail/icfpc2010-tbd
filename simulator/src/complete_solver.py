@@ -42,28 +42,45 @@ def solve(car_string):
 
 if __name__ == '__main__':
     
+    data = csv.reader(open('../data/car_ids'))
+    data = list(data)
+    
+    suppliers = {}
+    for line in data:
+        if len(line) == 0:
+            continue
+        id, sup = line
+        suppliers[int(id)] = int(sup)
+        
+    
     data = csv.reader(open('../data/car_data'))
     data = list(data)
     
-    shuffle(data)
+    tasks = []
+    
+    for line in data:
+        if line == []:
+            continue
+        car_no, stream = line
+        car_no = int(car_no)
+        stream = stream.strip()
+        
+        if car_no == 219:
+            continue
+        
+        tasks.append((car_no,suppliers[car_no],stream))
+
+    tasks.sort(key = lambda (n, sup, s): (sup, len(s)))
     
     total = 0
     solved = 0
     
     browser = None
     
-    for line in data:
-        if line == []:
-            continue
+    for car_no, sup, stream in tasks:
         
-        car_no, stream = line
-        car_no = int(car_no)
-        
-        if car_no == 219:
-            continue
-        
+        print "CAR #",car_no,'   ',sup,'suppliers'
         total += 1
-        
         print car_no
         result = solve(stream)
         if result is not None:

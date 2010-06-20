@@ -79,7 +79,7 @@ class Car(object):
                 return False
         return True
 
-    def test_on_fuel(self, fuel, num_tests=1000):
+    def test_on_fuel(self, fuel):
         """
         fuel is list of either numpy 2d arrays or just integers (for 1d case)
         """
@@ -92,13 +92,14 @@ class Car(object):
             n = 1
             assert all(isinstance(f, (int, long)) for f in fuel), fuel
 
-        if n == 1:
+        #if n == 1:
             # that's enough to ensure validity of the fuel
-            num_tests = 1
+        #    num_tests = 1
         
-        for i in range(num_tests):
-            input = [randrange(100) for i in range(n)]
-            input[0] += 1
+        for i in range(n):
+            input = [0 for i in range(n)]
+            input[0] = 1
+            input[i] = 1
             if not self.test_on_input(fuel, input):
                 return False
         return True
