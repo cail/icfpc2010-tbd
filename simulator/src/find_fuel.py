@@ -1,5 +1,4 @@
-from pprint import pprint
-
+from pprint import pprint, pformat
 from car import fuel_to_stream
 from solve_brute_force import solve_brute_force
 from solve_lp import solve_LP
@@ -40,7 +39,8 @@ def save_cache():
     global cache
     with open(CACHE_FILE,'wt') as cache_file: 
         print>>cache_file, "# car stream: fuel stream"
-        pprint(cache, stream=cache_file)
+        dump = pformat(cache).replace("{", "{\n").replace("}", "\n}")
+        print >> cache_file, dump
 
 
 
