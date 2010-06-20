@@ -52,8 +52,8 @@ def parse_chamber(stream):
 
 def parse_end(stream):
     try:
-        get_char()
-    except:
+        get_char(stream)
+    except StopIteration:
         return
     assert False
 
