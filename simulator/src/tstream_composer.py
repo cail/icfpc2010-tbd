@@ -32,10 +32,12 @@ def compose_list(lst, composer, sort_items = False):
     length = len(lst)
     if   length == 0: return '0'
     elif length == 1: return '1' + composer(lst[0])
-    else:             
+    else:
+        items = [composer(i) for i in lst]
+        if sort_items: items.sort()
         return ('22' + 
                 compose_number(length - 2) + 
-                ''.join(composer(i) for i in lst))
+                ''.join(items))
 
 # fuel
 def compose_row(row):
