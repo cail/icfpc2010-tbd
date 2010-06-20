@@ -22,7 +22,7 @@ def solve(car_string):
     
     print len(suffix), suffix
     
-    if len(suffix) > 120:
+    if len(suffix) > 50:
         print 'skip'
         return
     
@@ -40,7 +40,7 @@ def solve(car_string):
 
 if __name__ == '__main__':
     
-    data = csv.reader(open('../data/car_data_sorted'))
+    data = csv.reader(open('../data/car_data'))
     
     total = 0
     solved = 0

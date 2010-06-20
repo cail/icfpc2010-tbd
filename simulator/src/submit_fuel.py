@@ -128,16 +128,15 @@ def get_cardata(br, car):
     form = bs.fetch('form')[0]
     cardata = form.div.contents[1]
     return cardata
-     
+
 def load_cars():
     cars = open('../data/car_ids').readlines()
     br = login()
 
     existing_cardata = open('../data/car_data').readlines()
 
-    allcardata = []
-    
-    for car in cars:
+    for i, car in enumerate(cars):
+        print>>sys.stderr, i,'/',len(cars)
         c, no = car.split(', ')
         
         found = False
@@ -150,9 +149,10 @@ def load_cars():
             continue
         sys.stderr.write("fetching '{0}' of {1}\n".format(c, len(cars)))
         cardata = get_cardata(br, c)
-        allcardata.append((c, cardata))
+        
         print "{0}, {1}".format(c, cardata)
-        time.sleep(2)
+        #time.sleep(2)
+        
     return
         
             

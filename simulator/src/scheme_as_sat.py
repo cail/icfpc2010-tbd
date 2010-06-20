@@ -262,13 +262,16 @@ def reduce_problem(outputs):
     num_layers = 7
     
     fast_params = \
-        [(1,i) for i in range(18,8,-2)]+\
+        [(1,i) for i in range(16,8,-2)]+\
         [(2,i) for i in range(14,8,-2)]
     
     if len(outputs) > 120:
+        fast_params = [(1,10), (2,10), (2,8), (2,6), (2,5), (2,4)]
         params = [(3,5), (4,3), (4,2), (4,1)]
-    elif len(outputs) > 80:
-        params = [(3,6), (3,5), (4,4), (4,3), (4,2)]
+    elif len(outputs) > 45:
+        params = [(3,6), (3,5), (2,3), (2,2), (4,4), (4,3), (4,2)]
+    elif len(outputs) > 30:
+        params = [(3,6), (3,5), (2,3), (4,6), (4,5), (2,2), (4,4), (4,3), (4,2)]
     else:
         params = [(3,7), (4,7), (4,6), (4,5)]
     
