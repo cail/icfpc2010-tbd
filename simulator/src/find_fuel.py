@@ -32,12 +32,13 @@ def save_cache():
         print>>cache_file, "# car stream: fuel stream"
         pprint(cache, stream=cache_file)
 
-load_cache()
 
 
 def find_fuel_stream(car):
-    if USE_CACHE and car.representation in cache:
-        return cache[car.representation]
+    if USE_CACHE:
+        load_cache()
+        if car.representation in cache:
+            return cache[car.representation]
     
     fuel = find_fuel(car)
     if fuel == None:
@@ -46,6 +47,7 @@ def find_fuel_stream(car):
     print(fuel) 
     suffix = fuel_to_stream(fuel)
     
+    load_cache()
     cached = cache.get(car.representation)
     if cached is None or len(cached) > len(car.representation):
         cache[car.representation] = suffix

@@ -58,7 +58,6 @@ def save_cache():
         print >> cache_file, "# car: scheme"
         pprint(cache, stream=cache_file)
 
-load_cache()
 
 def submit_fuel(car, fuel):
     car = int(car)
@@ -83,9 +82,11 @@ def submit_fuel(car, fuel):
         assert False, result
         
     assert result.find('Good!') != -1, result
+    load_cache()
     cache[car] = fuel
     save_cache()
     return result
+
 
 def list_cars():
 

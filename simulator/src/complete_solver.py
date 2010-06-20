@@ -1,5 +1,7 @@
 from pprint import pprint
 import csv
+from random import shuffle
+from multiprocessing import Pool, TimeoutError
 
 
 from car import Car, fuel_to_stream
@@ -22,7 +24,7 @@ def solve(car_string):
     
     print len(suffix), suffix
     
-    if len(suffix) > 50:
+    if len(suffix) > 30:
         print 'skip'
         return
     
@@ -41,9 +43,15 @@ def solve(car_string):
 if __name__ == '__main__':
     
     data = csv.reader(open('../data/car_data'))
+    data = list(data)
+    
+    shuffle(data)
     
     total = 0
     solved = 0
+    
+    pool = Pool()
+    submit_tasks = []
     
     for line in data:
         if line == []:
@@ -61,11 +69,25 @@ if __name__ == '__main__':
         result = solve(stream)
         if result is not None:
             print submit_fuel(car_no, result)
+            #submit_tasks.append(pool.apply_async(submit_fuel,(car_no, result)))
             solved += 1
             
         print 'solved ', solved, '/', total
         
+        print len(submit_tasks), submit_tasks
+        while len(submit_tasks) > 0:
+            task = submit_tasks.pop()
+            try:
+                print task.get(timeout=0.5)
+            except TimeoutError:
+                submit_tasks.append(task)
+                print 'timeout'
+                break
+        
             
     print 'solved ', solved, '/', total
+    
+    for task in submit_tasks:
+        print task.get()
     
     pass
