@@ -97,7 +97,7 @@ if __name__ == '__main__':
             
             solved += 1
             
-        print 'solved ', solved, '/', total
+        print 'solved ', solved, '/', total, '/', len(tasks)
         
         
             
