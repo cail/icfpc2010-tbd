@@ -76,12 +76,7 @@ def test_compose_number():
 test_parse_number()
 test_compose_number()
 #pprint(parse_chambers(clean_stream('')))
+#matrices = parse_matrices(iter('22102202201011220002202201002200022022010022000'))
+#print matrices
 
-s = compose_matrices([[[1, 1],
-       [0, 0]], [[1, 0],
-       [0, 0]], [[1, 1],
-       [0, 0]]])
-print len(s), s
-
-#print submit_car(new, fuel)
-print parse_matrices(iter('22102202201011220002202201002200022022010022000'))
+print submit_car('123', fuel)

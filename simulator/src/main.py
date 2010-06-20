@@ -2,6 +2,7 @@ from time import clock
 
 from numpy import array
 
+
 from car import *
 from solve_lp import *
 from solve_brute_force import *
