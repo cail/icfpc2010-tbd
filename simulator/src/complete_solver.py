@@ -24,7 +24,7 @@ def solve(car_string):
     
     print len(suffix), suffix
     
-    if len(suffix) > 30:
+    if len(suffix) > 35:
         print 'skip'
         return
     
@@ -50,9 +50,6 @@ if __name__ == '__main__':
     total = 0
     solved = 0
     
-    #pool = Pool()
-    submit_tasks = []
-    
     browser = None
     
     for line in data:
@@ -74,27 +71,16 @@ if __name__ == '__main__':
                 print 'login',
                 browser = login()
                 print 'ok'
+                
             print 'submitting...'
             print submit_fuel(car_no, result, br=browser)
-            #submit_tasks.append(pool.apply_async(submit_fuel,(car_no, result)))
+            
             solved += 1
             
         print 'solved ', solved, '/', total
         
-        print len(submit_tasks), submit_tasks
-        while len(submit_tasks) > 0:
-            task = submit_tasks.pop()
-            try:
-                print task.get(timeout=0.5)
-            except TimeoutError:
-                submit_tasks.append(task)
-                print 'timeout'
-                break
         
             
-    print 'solved ', solved, '/', total
+    print 'finally solved ', solved, '/', total
+   
     
-    for task in submit_tasks:
-        print task.get()
-    
-    pass
