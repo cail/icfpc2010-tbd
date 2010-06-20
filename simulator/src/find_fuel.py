@@ -5,21 +5,29 @@ from solve_brute_force import solve_brute_force
 from solve_lp import solve_LP
 from solve_mc import solve_monte_carlo
 
-USE_CACHE = True
+USE_CACHE = False
 # set it to false if you improve solver and want to calculate better solutions
 
 
 
 def find_fuel(car):
-    for f in [solve_brute_force, solve_LP]:
-        print f
-#    for f in [solve_brute_force]:
+    best = None
+    best_len = 1e100
+    
+    for f in [solve_brute_force, solve_monte_carlo, solve_LP]:
+        print f.__name__,
         fuel = f(car)
         if fuel is not None:
-            print 'solved with', f
             assert car.test_on_fuel(fuel), fuel
-            return fuel
-
+            l = len(fuel_to_stream(fuel))
+            print 'solved', l
+            if l < best_len:
+                best_len = l
+                best = fuel
+        else:
+            print
+            
+    return best
 
 CACHE_FILE = 'car_fuel_cache.txt'
 
@@ -54,5 +62,7 @@ def find_fuel_stream(car):
     if cached is None or len(cached) > len(car.representation):
         cache[car.representation] = suffix
         save_cache()
+    else:
+        return cached
         
     return suffix
