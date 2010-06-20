@@ -1,6 +1,7 @@
 from pprint import pprint
 import csv
 from random import shuffle, random
+import sys
 from multiprocessing import Pool, TimeoutError
 
 
@@ -9,12 +10,15 @@ from scheme_as_sat import generate_scheme_for_fuel
 from find_fuel import find_fuel_stream
 from submit_fuel import submit_fuel, login
     
+    
+VERBOSE = True
 
 def solve(car_string):
     assert car_string.strip() != '0'
     
     car = Car.from_stream(car_string.strip())
-    print car
+    if VERBOSE:
+        print car
     
     suffix = find_fuel_stream(car)
     
@@ -81,7 +85,6 @@ if __name__ == '__main__':
         
         print "CAR #",car_no,'   ',sup,'suppliers'
         total += 1
-        print car_no
         result = solve(stream)
         if result is not None:
             if browser is None:
