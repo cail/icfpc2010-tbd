@@ -7,7 +7,7 @@ from multiprocessing import Pool, TimeoutError
 from car import Car, fuel_to_stream
 from scheme_as_sat import generate_scheme_for_fuel
 from find_fuel import find_fuel_stream
-from submit_fuel import submit_fuel
+from submit_fuel import submit_fuel, login
     
 
 def solve(car_string):
@@ -50,8 +50,10 @@ if __name__ == '__main__':
     total = 0
     solved = 0
     
-    pool = Pool()
+    #pool = Pool()
     submit_tasks = []
+    
+    browser = None
     
     for line in data:
         if line == []:
@@ -68,7 +70,12 @@ if __name__ == '__main__':
         print car_no
         result = solve(stream)
         if result is not None:
-            print submit_fuel(car_no, result)
+            if browser is None:
+                print 'login',
+                browser = login()
+                print 'ok'
+            print 'submitting...'
+            print submit_fuel(car_no, result, br=browser)
             #submit_tasks.append(pool.apply_async(submit_fuel,(car_no, result)))
             solved += 1
             
