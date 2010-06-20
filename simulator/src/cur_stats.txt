@@ -1,0 +1,181 @@
+Rank:  27
+Score:  95.984
+Solved:  174
+Submitted:  0
+[mkotha]  -  778,633
+HITOCry  -  643,365
+ocamlriders  -  642,237
+6-11  -  609,754
+Celestial Dire Badger  -  455,212
+shinh2  -  406,742
+thiscodeismade  -  349,359
+kuma-  -  323,754
+solor6  -  308,581
+perpetuum_mobile  -  304,306
+indeed  -  206,353
+buteforce  -  204,227
+riesz  -  148,975
+jabber-ru  -  139,375
+The Invisible Imp  -  137,418
+THIRTEEN  -  136,414
+oh!tomaton  -  131,877
+FiKdM  -  119,168
+ural_nerds  -  116,140
+carlop  -  115,448
+Aqn, Alice and Isuzu:Cuteness   -  113,207
+The Cat is #1!!  -  108,165
+MIMteam  -  104,958
+KoKaml  -  104,355
+zng  -  96,024
+TBD  -  95,984
+Enoch Root  -  95,882
+oroborus  -  91,549
+tda  -  91,514
+team-spikey  -  90,735
+SzM  -  84,069
+ahiru  -  80,406
+nbu  -  78,774
+hack-the-loop  -  78,519
+OLNS  -  74,358
+SnakeTeam  -  73,537
+Tapani  -  70,775
+eger a marson  -  70,215
+clfp  -  66,923
+Side Effects May Include...  -  64,723
+focos  -  62,793
+Death by Coffee  -  59,887
+pluk  -  54,479
+blK  -  52,683
+Higher Order Of Zeuxis  -  49,320
+Team Meh  -  47,642
+stanfyteam  -  47,491
+vorpal  -  46,821
+irori  -  46,134
+Out of Gas  -  45,012
+cookiecar  -  44,485
+Nodal Asymmetry  -  40,127
+cashto  -  38,648
+OneDayPastDue  -  36,692
+smly  -  33,563
+tomerun  -  33,117
+greasypelicanfury  -  31,372
+cyborg cats riding velocirapto  -  31,017
+emoken  -  30,344
+tempatel  -  29,533
+Goto10  -  27,152
+Kharkiv MINDS  -  26,982
+Ramen Holiday  -  26,870
+ooplss2010  -  25,355
+fake002  -  24,573
+The Nameless Pug  -  22,935
+zerohachi  -  22,103
+constantacceleration  -  21,207
+ucla_math_2010  -  20,381
+ozy4dm  -  19,867
+niwasaki.kstm.org  -  19,160
+The Usual Suspects  -  17,984
+korol&amp;sheva  -  17,235
+example  -  16,244
+orbit  -  16,040
+codingmonkeys  -  15,240
+lepidum  -  14,805
+spb-archlinux  -  14,217
+qwerty  -  12,787
+hiromi_ayase  -  12,631
+madskillz&#039;); DROP TABLE result  -  11,257
+fake001  -  10,468
+ssyk  -  10,397
+raging mushrooms  -  9,768
+sylvain  -  7,465
+ube  -  6,264
+United Coding Team  -  5,974
+test_team  -  4,263
+EnochRoot  -  3,039
+thecamljoes  -  2,798
+Ymgve  -  2,790
+iddqd  -  2,384
+DeeMon  -  2,274
+tempfile  -  1,753
+zenhackers  -  1,482
+Skobochka  -  1,331
+yowa  -  1,141
+kirill_fake  -  1,120
+wilee  -  1,028
+fictive  -  0,986
+chutoys  -  0,972
+tugawa  -  0,967
+romanr  -  0,925
+masakey  -  0,869
+ntua67P  -  0,768
+genwitt  -  0,732
+dumbass  -  0,724
+jgates  -  0,696
+twanvl  -  0,688
+C--  -  0,667
+towerDefence  -  0,659
+Consalot  -  0,646
+big bang  -  0,645
+tasman  -  0,643
+blabla01  -  0,554
+archer  -  0,551
+Orange Tractor  -  0,533
+Futamura Rejection  -  0,488
+team2010  -  0,484
+shimamo  -  0,466
+bootspig  -  0,466
+pasha  -  0,459
+vahnatai  -  0,449
+makkywelly  -  0,435
+tpolm  -  0,426
+Drunk in Charge of a Normalise  -  0,414
+amanous  -  0,411
+radico  -  0,403
+shuzi cuowu  -  0,386
+lambda-187  -  0,357
+geekdrums  -  0,350
+Reverse engineering is not my   -  0,334
+ob.kstm.org  -  0,334
+eeight  -  0,330
+endo  -  0,326
+datahype  -  0,270
+Escape  -  0,250
+SPb SU NT  -  0,245
+bunch of mathematicians  -  0,240
+sohmens  -  0,231
+machines  -  0,211
+You&#039;re Very Tall  -  0,206
+hufflepuff  -  0,203
+mak_test  -  0,173
+Waterloo Napoleons  -  0,167
+Login  -  0,160
+LazyBear  -  0,157
+cupoft2  -  0,154
+l.e. mappen  -  0,149
+IanLanceTaylor  -  0,138
+logan  -  0,129
+uguu.org  -  0,124
+iwaaamaaaa  -  0,117
+The Unchecked Exceptions  -  0,113
+ALPHA  -  0,113
+The A-Team  -  0,112
+wheezards  -  0,107
+taxidriver  -  0,093
+A blend of ALUG  -  0,093
+Rhope Burn  -  0,093
+bokesan  -  0,084
+micah  -  0,084
+ZIP  -  0,075
+butanebob  -  0,075
+The Raging Semicolons  -  0,075
+ETT  -  0,065
+ParseError  -  0,059
+CompanyOfHeroes  -  0,050
+ccw  -  0,044
+tokorobashi  -  0,026
+arekuma  -  0,010
+Intelliarts  -  0,006
+TeamSampou  -  0,006
+Looser  -  0,006
+hinagiku  -  0,004
+icfp2010@develocation.de  -  0,004
+Lukoil  -  0,003

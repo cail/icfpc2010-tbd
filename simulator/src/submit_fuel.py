@@ -2,10 +2,12 @@ import re
 import mechanize
 import sys
 import time
-from pprint import pprint
+from pprint import pprint, pformat
 from submit_car import PASSWD, USER
 from mechanize._beautifulsoup import BeautifulSoup, BeautifulStoneSoup
 
+# if true, makes assertions on fuel errors
+FAIL_ON_ASSERT = False
 
 def login():
     br = mechanize.Browser()
@@ -57,7 +59,8 @@ def save_cache():
     global cache
     with open(CACHE_FILE, 'wt') as cache_file: 
         print >> cache_file, "# car: scheme"
-        pprint(cache, stream=cache_file)
+        dump = pformat(cache).replace("{", "{\n").replace("}", "\n}")
+        print >> cache_file, dump
 
 
 def submit_fuel(car, fuel, br=None):
@@ -80,12 +83,18 @@ def submit_fuel(car, fuel, br=None):
     if result.find('You have already submitted this solution') != -1:
         cache[car] = fuel
         save_cache()
-        assert False, result
-        
-    assert result.find('Good!') != -1, result
-    load_cache()
-    cache[car] = fuel
-    save_cache()
+        if FAIL_ON_ASSERT:
+            assert False, result
+        return result
+
+    if result.find('Good!') == -1:
+        print '========== Server fail ==========='
+        if FAIL_ON_ASSERT:
+            assert False, result
+    else:
+        load_cache()
+        cache[car] = fuel
+        save_cache()
     return result
 
 

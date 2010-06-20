@@ -1,5 +1,8 @@
-import psyco
-psyco.full()
+try:
+    import psyco
+    psyco.full()
+except ImportError:
+    print "you do not have psyco, but (hopefully) it's fine"
 
 from random import randrange, shuffle
 from time import clock
