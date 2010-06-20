@@ -1,5 +1,6 @@
 from pprint import pprint
 import csv
+import re
 from random import shuffle, random
 import sys
 from multiprocessing import Pool, TimeoutError
@@ -46,6 +47,8 @@ def solve(car_string):
 
 if __name__ == '__main__':
     
+    print "Usage options: skipsubmitted | startwith <carno> "
+    
     data = csv.reader(open('../data/car_ids'))
     data = list(data)
     
@@ -55,7 +58,22 @@ if __name__ == '__main__':
             continue
         id, sup = line
         suppliers[int(id)] = int(sup)
-        
+
+    skipsubmitted = False
+    start_with = None
+    for i, v in enumerate(sys.argv):
+        if v == 'skipsubmitted':
+            skipsubmitted = True
+        if v == 'startwith':
+            start_with = int(sys.argv[i+1])
+
+    submittedcars = set()
+    if skipsubmitted:
+        submitted = open('../data/submitted_solutions.txt').readlines()
+        for line in submitted:
+            m = re.match(r"\s*(\d+)\:", line)
+            if m:
+                submittedcars.add(int(m.group(1)))
     
     data = csv.reader(open('../data/car_data'))
     data = list(data)
@@ -72,10 +90,25 @@ if __name__ == '__main__':
         if car_no == 219:
             continue
         
+        # skip already submitted cars
+        if car_no in submittedcars:
+            continue
+        
         tasks.append((car_no,suppliers[car_no],stream))
 
     tasks.sort(key = lambda (n, sup, s): (sup, random()*0.01))
     
+    if start_with:
+        start_idx = 0
+        for i, id in enumerate(tasks):
+            if id[0] == start_with:
+                start_idx = i
+                break
+        tasks = tasks[start_idx:] 
+        print "skipping first {0} elements".format(start_idx)
+
+
+
     total = 0
     solved = 0
     
@@ -97,7 +130,7 @@ if __name__ == '__main__':
             
             solved += 1
             
-        print 'solved ', solved, '/', total, '/', len(tasks)
+        print 'solved ', solved, '/ current ', total, '/ total ', len(tasks)
         
         
             
