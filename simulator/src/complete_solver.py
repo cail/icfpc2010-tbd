@@ -156,11 +156,11 @@ if __name__ == '__main__':
 
                 
             if testonly:
-                print submit_test_car_fuel(stream, result)
-                #if success:
-                fout = open('test_data', 'a')
-                fout.write(repr((car_no, result)))
-                fout.close()
+                tres = submit_test_car_fuel(stream, result)
+                if tres.find('Good!') != -1:
+                    fout = open('test_data', 'a')
+                    fout.write(repr((car_no, result)))
+                    fout.close()
             else:
                 if False and browser is None:
                     # disabled because there is a risk of timeout
