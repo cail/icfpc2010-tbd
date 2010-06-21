@@ -39,7 +39,7 @@ def solve(car_string):
     if len(suffix) < max_suffix:
         scheme = generate_scheme_for_fuel(suffix)
     else:
-        scheme = generate_scheme_for_fuel(suffix)
+        scheme = fast_generate_scheme_for_fuel(suffix)
         
     if scheme is None:
         return None

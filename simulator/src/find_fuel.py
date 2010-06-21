@@ -18,8 +18,8 @@ def find_fuel(car):
     best_len = 1e100
     
     for f in [solve_brute_force, 
-              #solve_monte_carlo_size2, 
-              #solve_monte_carlo_size3,
+              solve_monte_carlo_size2,
+              solve_monte_carlo_size3,
               solve_LP]:
         print f,
         fuel = f(car)
@@ -30,6 +30,8 @@ def find_fuel(car):
             if l < best_len:
                 best_len = l
                 best = fuel
+            if f == solve_brute_force: # brute force always finds best solution
+                break
         else:
             print
             

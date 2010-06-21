@@ -7,7 +7,7 @@ from car import fuel_to_stream, numpy_fuel
 print 'prepairing fuels for brute force...',
 fuels_to_search = {}
 for i in range(1, 7):
-    n = 20000
+    n = 40000
     limit = int(0.5 + exp(log(n)/i))
     
     fuels = list(product(*[range(1,limit)]*i))
