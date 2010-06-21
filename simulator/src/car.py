@@ -98,12 +98,11 @@ class Car(object):
             for t in chamber.lower:
                 lower = dot(lower, fuel[t])
             flag = True
+            if isMain and upper[0,0] <= lower[0,0]:
+                return False
             for i in range(n):
                 for j in range(n):
                     if upper[i,j] < lower[i,j]:
-                        flag = False
-                        break
-                    if isMain and i == 0 and upper[i,j] <= lower[i,j]:
                         flag = False
                         break
             if not flag:
