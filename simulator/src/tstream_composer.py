@@ -13,14 +13,14 @@ def compose_digit(n):
 
 def compose_number(n):
     p = 0
-    for i in xrange(10000):
+    for i in xrange(100000):
         p_prev = p
         p += 3 ** i
         if n < p:
             digits = encode_base3(n - p_prev, i)
             return compose_list(digits, compose_digit)
     # wtf?
-    assert False
+    assert False, n
     
 def compose_list(lst, composer, sort_items = False):
     """sort_items is a kind of hack that is only used in compose_chambers to 
