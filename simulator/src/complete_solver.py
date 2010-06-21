@@ -122,9 +122,9 @@ if __name__ == '__main__':
     
     
     if sortbycarsize:
-        tasks.sort(key = lambda (n, sup, s): (-sup, len(s)))
+        tasks.sort(key = lambda (n, sup, s): (sup, len(s)))
     else:
-        tasks.sort(key = lambda (n, sup, s): (-sup, random()*0.01))
+        tasks.sort(key = lambda (n, sup, s): (sup, random()*0.01))
     
     if start_with:
         start_idx = 0
