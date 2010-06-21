@@ -7,7 +7,7 @@ from car import fuel_to_stream, numpy_fuel
 print 'prepairing fuels for brute force...',
 fuels_to_search = {}
 for i in range(1, 7):
-    n = 40000
+    n = 80000
     limit = int(0.5 + exp(log(n)/i))
     
     fuels = list(product(*[range(1,limit)]*i))
@@ -19,7 +19,7 @@ for i in range(1, 7):
 print 'done'     
 
 def solve_brute_force(car):
-    timeout = 1.0
+    timeout = 3.0
     start = clock()
     
     for fuel in fuels_to_search[car.num_tanks]:
