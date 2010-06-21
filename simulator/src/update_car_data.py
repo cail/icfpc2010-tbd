@@ -72,7 +72,8 @@ def login():
     return br
 
 def get_car_data(br, id):
-    for _ in range(2):
+    tries = 0
+    while True: 
         try:
             res = br.open("http://icfpcontest.org/icfp10/instance/{0}/solve/form".format(id))
             body = res.read()
@@ -81,6 +82,9 @@ def get_car_data(br, id):
             data = form.div.contents[1]
             return data
         except Exception as exc:
+            tries += 1
+            if tries > 2:
+                raise
             print 'Omg! ' + str(exc)
         
 
