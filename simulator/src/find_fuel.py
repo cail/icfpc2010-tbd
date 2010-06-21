@@ -31,8 +31,8 @@ def find_fuel(car):
     
     for f in [solve_brute_force, 
               solve_monte_carlo_size2,
-              solve_monte_carlo_size3,
-              solve_monte_carlo_size6,
+              #solve_monte_carlo_size3,
+              #solve_monte_carlo_size6,
               solve_LP]:
         print f,
         fuel = f(car)
