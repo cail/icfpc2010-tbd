@@ -12,6 +12,7 @@ __all__ = [
     'Car',
     'Chamber',
     'fuel_to_stream',
+    'numpy_fuel',
 ]
 
 def numpy_fuel(fuel):

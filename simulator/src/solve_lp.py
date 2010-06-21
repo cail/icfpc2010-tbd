@@ -48,5 +48,8 @@ def solve_LP(car):
         return
         #assert False
     
+    if max(value(v) for v in vars) > 2000:
+        return
+
     # go back from logspace to linear space
     return [2**value(v) for v in vars]
