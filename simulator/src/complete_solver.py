@@ -12,6 +12,8 @@ from car import Car, fuel_to_stream
 from scheme_as_sat import generate_scheme_for_fuel
 from find_fuel import find_fuel_stream
 from submit_fuel import submit_fuel, login, submit_test_car_fuel
+from factory_builder import compile_factory
+from scheme import key
     
     
 VERBOSE = True
@@ -33,18 +35,16 @@ def solve(car_string):
     
     print len(suffix), suffix
     
-    if len(suffix) > max_suffix:
-        print 'skip'
-        return
-    
-    suffix = map(int, suffix)
+    if len(suffix) < max_suffix:
+        suffix = map(int, suffix)
 
-    scheme = generate_scheme_for_fuel(suffix)
-    
-    if scheme is None:
-        return None
-    
-    s = str(scheme)
+        scheme = generate_scheme_for_fuel(suffix)
+        if scheme is None:
+            return None
+        s = str(scheme)
+    else:
+        s = compile_factory(''.join(map(str,key))+suffix)
+        
     print len(s.split('\n'))-2,'gates'
     return s
 
@@ -144,8 +144,8 @@ if __name__ == '__main__':
     
     for car_no, sup, stream in tasks:
         
-        if sup == 1:
-            continue
+        #if sup == 1:
+        #    continue
         
         print "CAR #", car_no, '   ', sup, 'suppliers'
         total += 1

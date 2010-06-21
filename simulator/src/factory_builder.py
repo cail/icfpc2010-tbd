@@ -34,7 +34,7 @@ def build_scheme(sequences):
     s.connect('X', str(input_node) + 'L')
     print s.to
     print s.from_
-    
+    s.validate()
     return s
 
 def compile_factory(output):

@@ -6,7 +6,7 @@ from solve_mc import solve_monte_carlo
 
 from functools import partial
 
-USE_CACHE = False
+USE_CACHE = True
 # set it to false if you improve solver and want to calculate better solutions
 
 
@@ -18,8 +18,8 @@ def find_fuel(car):
     best_len = 1e100
     
     for f in [solve_brute_force, 
-              solve_monte_carlo_size2, 
-              solve_monte_carlo_size3,
+              #solve_monte_carlo_size2, 
+              #solve_monte_carlo_size3,
               solve_LP]:
         print f,
         fuel = f(car)
