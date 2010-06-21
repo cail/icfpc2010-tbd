@@ -66,9 +66,9 @@ class Car(object):
         chambers = []
         for ch, isMain in self.all_chambers():
             if isMain:
-                chambers.append((1,ch.upper,ch.lower))
-            else:
                 chambers.append((0,ch.upper,ch.lower))
+            else:
+                chambers.append((1,ch.upper,ch.lower))
         result = compose_chambers(chambers)
         return result
     
@@ -189,6 +189,6 @@ if __name__ == '__main__':
     car = Car.from_stream(s)
     
     print car
-    result = car.raw_to_stream()
+    result = car.to_stream()
     assert s == result
     
