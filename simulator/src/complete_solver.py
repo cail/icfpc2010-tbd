@@ -87,8 +87,8 @@ if __name__ == '__main__':
     skipsubmitted = True
     start_with = None
     end_with = None
-    minsuppliers = 2
-    maxsuppliers = 2
+    minsuppliers = maxsuppliers = 11
+    
     sortbycarsize = False
     testonly = False
     showonly = False

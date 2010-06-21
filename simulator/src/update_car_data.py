@@ -99,7 +99,7 @@ def update_car_data(br, ids):
                 print>>f, "%s, %s" % (id, cardata)
                 f.flush()
                 print '%d/%d' % (i + 1, new_len)
-                time.sleep(0.5)
+                time.sleep(0.2)
 
 def update_ids(ids, level):
     print 'updating car_ids'
