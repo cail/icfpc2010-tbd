@@ -65,7 +65,7 @@ if __name__ == '__main__':
 
     skipsubmitted = False
     start_with = None
-    minsuppliers = 0
+    minsuppliers = 2
     maxsuppliers = 1000
     sortbycarsize = False
     testonly = False
@@ -164,7 +164,7 @@ if __name__ == '__main__':
                     fout.write(repr((car_no, result)))
                     fout.close()
             else:
-                if False and browser is None:
+                if browser is None:
                     # disabled because there is a risk of timeout
                     print 'login',
                     browser = login()
