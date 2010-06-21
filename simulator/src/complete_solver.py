@@ -16,7 +16,6 @@ from multiprocessing import Pool, TimeoutError
 
 from car import Car, fuel_to_stream
 from scheme_as_sat import generate_scheme_for_fuel
-from find_fuel import find_fuel_stream
 from submit_fuel import submit_fuel, login, submit_test_car_fuel
 from factory_builder import fast_generate_scheme_for_fuel
 from scheme import key
@@ -62,7 +61,18 @@ def solve(car_string):
 
 if __name__ == '__main__':
     
-    print "Usage options: skipsubmitted | startwith <carno> | maxsuffix <no> | minsuppliers <no> | maxsuppliers <no> | sortbycarsize | TESTONLY"
+    print """
+    Usage options:
+      skipsubmitted     | skip already submitted cars
+      startwith <carno> | start from specified <carno>, discard all cars before
+      endwith <carno>   | end with specified <carno>, discard all cars after
+      maxsuffix <no>    | max fuel suffix to run with vlad's analysis
+      minsuppliers <no> | minimum number of suppliers, discard all less
+      maxsuppliers <no> | max number of suppliers, discard all above
+      sortbycarsize     | sort by car size, else uses random
+      TESTONLY          | submit agaits TEST server. results are writted into test_data
+      SHOWONLY          | only shows the list of cars to run with, no run
+    """
     
     data = csv.reader(open('../data/car_ids'))
     data = list(data)
@@ -76,15 +86,19 @@ if __name__ == '__main__':
 
     skipsubmitted = True
     start_with = None
+    end_with = None
     minsuppliers = 0
     maxsuppliers = 0
     sortbycarsize = False
     testonly = False
+    showonly = False
     for i, v in enumerate(sys.argv):
         if v == 'skipsubmitted':
             skipsubmitted = True
         if v == 'startwith':
             start_with = int(sys.argv[i + 1])
+        if v == 'endwith':
+            end_with = int(sys.argv[i + 1])
         if v == 'maxsuffix':
             max_suffix = int(sys.argv[i + 1])
         if v == 'minsuppliers':
@@ -95,6 +109,8 @@ if __name__ == '__main__':
             sortbycarsize = True
         if v == 'TESTONLY':
             testonly = True
+        if v == 'SHOWONLY':
+            showonly = True
             
 
     submittedcars = set()
@@ -111,12 +127,12 @@ if __name__ == '__main__':
     tasks = []
     
     for line in data:
-        if line == []:
+        if len(line) < 2:
             continue
         car_no, stream = line
         car_no = int(car_no)
         stream = stream.strip()
-        
+                
         if car_no == 219:
             continue
         
@@ -137,15 +153,16 @@ if __name__ == '__main__':
     else:
         tasks.sort(key=lambda (n, sup, s): (sup, random()*0.01))
     
-    if start_with:
+    if start_with or end_with:
         start_idx = 0
+        end_idx = len(tasks)
         for i, id in enumerate(tasks):
             if id[0] == start_with:
                 start_idx = i
-                break
-        tasks = tasks[start_idx:] 
-        print "skipping first {0} elements".format(start_idx)
-
+            if id[0] == end_with:
+                end_idx = i+1
+        tasks = tasks[start_idx:end_idx] 
+        print "start from {0}'th element, end with {1}'th element".format(start_idx, end_idx)
 
 
     total = 0
@@ -153,13 +170,24 @@ if __name__ == '__main__':
     
     browser = None
     
+    # this is to prevent big delay on startup
+    if not showonly:
+        from find_fuel import find_fuel_stream
+        
+    
     for car_no, sup, stream in tasks:
         
         #if sup == 1:
         #    continue
         
-        print "CAR #", car_no, '   ', sup, 'suppliers'
+        print "CAR #", car_no, '\t\t', sup, 'suppliers', "\t\t", len(stream), "\tlength"  
+        
         total += 1
+        
+        if showonly:
+            
+            continue
+
         result = solve(stream)
         if result is not None:
             print 'submitting: '
@@ -170,6 +198,7 @@ if __name__ == '__main__':
                 
             if testonly:
                 tres = submit_test_car_fuel(stream, result)
+                print tres
                 if tres.find('Good!') != -1:
                     fout = open('test_data', 'a')
                     fout.write(repr((car_no, result)))
