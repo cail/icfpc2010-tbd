@@ -65,5 +65,5 @@ if __name__ == '__main__':
     print "Solved: ", csolved
     print "Submitted: ", csubmitted
     
-    for r in results:
-        print r[0], " - ", r[1]
+#    for r in results:
+#        print r[0], " - ", r[1]

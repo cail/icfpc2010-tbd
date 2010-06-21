@@ -97,33 +97,39 @@ def newest_file(*names):
     return max(map(ftime, names))[1]
 
 class Sync_server(object):
+    def _update_car_ids(self):
+        self.ids = dict((car.id, i) for i, car in enumerate(self.cars))
+        
     def __init__(self):
         fname = newest_file(CACHE_FILE, TMP_FILE, BACKUP_FILE)
         if fname:
             with open(fname, 'r') as f:
                 self.cars = eval(f.read())
         else:
-            self.cars = {}
+            self.cars = []
+        self._update_car_ids()
         self.last_save = time()
         self.dirty = False
         
     def _get_car(self, id):
-        car = self.cars.get(id, None)
+        pos = self._ids(
+        return (pos if pos != hi and a[pos] == x else -1) # don't walk off the end        car = self.cars.get(id, None)
         if car is None:
             car = Car_info(id)
         return car
     
     @server_method
-    def send_car_list(self, lst):
-        cars = self.cars
+    def update_cars(self, lst):
+        new = []
         for data in lst:
-            id = data['id']
-            cars[id] = self._get_car(id).update(data)
-            self.dirty = True
+            new.append(self._get_car(id).update(data))
+        self.cars.extend(new)
+        self.cars.sort()
+        self.dirty = True
             
             
     @server_method
-    def select_cars(self, limit = 100, full = False, has_source = None):
+    def select_cars(self, limit = 100, full = False, specific_ids = None, has_source = None):
         """
         limit 
         """
@@ -132,9 +138,10 @@ class Sync_server(object):
             return car.update(source=source)
         if full: strip_car_info = lambda x: x
         res = {}
-        for id, car in self.cars.iteritems():
-            
+        for car in self.cars:
+            id = car.id
             if has_source is not None and (car.source is not None) != has_source: continue
+            if specific_ids is not None and car.id
             
             res[id] = strip_car_info(car)
             if len(res) >= limit: break
