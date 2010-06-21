@@ -10,8 +10,15 @@ USE_CACHE = True
 # set it to false if you improve solver and want to calculate better solutions
 
 
-solve_monte_carlo_size2 = partial(solve_monte_carlo, size=2) 
-solve_monte_carlo_size3 = partial(solve_monte_carlo, size=3) 
+def solve_monte_carlo_size2(car):
+    return solve_monte_carlo(car, size=2) 
+
+def solve_monte_carlo_size3(car):
+    return solve_monte_carlo(car, size=3) 
+
+def solve_monte_carlo_size6(car):
+    return solve_monte_carlo(car, size=6) 
+
 
 def find_fuel(car):
     best = None
@@ -20,6 +27,7 @@ def find_fuel(car):
     for f in [solve_brute_force, 
               solve_monte_carlo_size2,
               solve_monte_carlo_size3,
+              solve_monte_carlo_size6,
               solve_LP]:
         print f,
         fuel = f(car)
