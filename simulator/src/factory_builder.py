@@ -32,8 +32,8 @@ def build_scheme(sequences):
         prev_start = current - length
     s.connect(str(sequences[0] - 1) + 'L', 'X')
     s.connect('X', str(input_node) + 'L')
-    print s.to
-    print s.from_
+    #print s.to
+    #print s.from_
     s.validate()
     return s
 
