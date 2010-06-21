@@ -3,14 +3,14 @@ from pulp import *
 
 def solve_LP(car):
     # since we are in logspace, all variables should be strictly positive
-    
+    return
     eps = 1
     vars = [LpVariable('x%d'%i, lowBound=eps, cat=LpInteger) 
             for i in range(car.num_tanks)]
     problem = LpProblem('search for fuel', LpMinimize)
     problem += lpSum(vars)
     
-    if (len(car.main_chambers) + len(car.aux_chambers))*car.num_tanks > 200:
+    if (len(car.main_chambers) + len(car.aux_chambers))*car.num_tanks > 20:
         # too hard
         return
     
