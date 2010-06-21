@@ -40,7 +40,7 @@ def solve(car_string):
         print 'fail'
         return
     
-    if len(suffix) > 10000:
+    if len(suffix) > 2000:
         print 'too long'
         return
     
