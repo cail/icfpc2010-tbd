@@ -1,10 +1,12 @@
 from random import randrange
 from collections import namedtuple
+from itertools import *
+from copy import deepcopy
 
 from numpy import dot, array, ndarray, identity
 
 from tstream_parser import parse_chambers
-from tstream_composer import compose_matrices
+from tstream_composer import compose_matrices, compose_chambers
 
 __all__ = [
     'Car',
@@ -41,7 +43,7 @@ class Car(object):
         'aux_chambers',
         'representation',
         ]
-
+    
     @staticmethod
     def from_stream(s):
         assert isinstance(s,basestring)
@@ -60,12 +62,31 @@ class Car(object):
         car.num_tanks = t+1
         return car
     
-    def length(self):
-        return sum(len(ch.upper)+len(ch.lower) for ch, _ in self.all_chambers())
+    def raw_to_stream(self):
+        chambers = []
+        for ch, isMain in self.all_chambers():
+            if isMain:
+                chambers.append((1,ch.upper,ch.lower))
+            else:
+                chambers.append((0,ch.upper,ch.lower))
+        result = compose_chambers(chambers)
+        return result
+    
+    def permute(self, perm):
+        car = deepcopy(self)
+        for ch, _ in car.all_chambers():
+            for pipe in ch:
+                for i in range(len(pipe)):
+                    pipe[i] = perm[pipe[i]] 
+        return car
     
     def to_stream(self):
-        raise NotImplementedError()
-    
+        return min(self.permute(perm).raw_to_stream()
+            for perm in permutations(range(self.num_tanks)))
+
+    def length(self):
+        return sum(len(ch.upper)+len(ch.lower) for ch, _ in self.all_chambers())
+   
     def __str__(self):
         return "Car(%s,\n  %s,\n  %s)"%(self.num_tanks, self.main_chambers, self.aux_chambers)
 
@@ -164,7 +185,10 @@ def test_chamber_on_input(chamber, fuel, input, main):
 
 
 if __name__ == '__main__':
-    car = Car.from_stream('122221001200000000000000000000010')
+    s = '122221001200000000000000000000010'
+    car = Car.from_stream(s)
     
     print car
+    result = car.raw_to_stream()
+    assert s == result
     
