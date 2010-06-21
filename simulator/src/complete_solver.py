@@ -71,8 +71,8 @@ if __name__ == '__main__':
 
     skipsubmitted = False
     start_with = None
-    minsuppliers = 0
-    maxsuppliers = 1000
+    minsuppliers = -1
+    maxsuppliers = -1
     sortbycarsize = False
     testonly = False
     for i, v in enumerate(sys.argv):
