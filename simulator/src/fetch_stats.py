@@ -7,7 +7,6 @@ from submit_car import PASSWD, USER
 from mechanize._beautifulsoup import BeautifulSoup, BeautifulStoneSoup
 
 def fetch_stats(br=None):
-    
     if br is None:
         br = login()
     
