@@ -1,3 +1,9 @@
+try:
+    import psyco
+    psyco.full()
+except ImportError:
+    print "you do not have psyco, but (hopefully) it's fine"
+
 from pprint import pprint
 import csv
 import re
@@ -45,7 +51,7 @@ def solve(car_string):
         return None
     s = str(scheme)
     
-    print len(s.split('\n'))-2,'gates'
+    print len(s.split('\n')) - 2, 'gates'
     return s
 
 
@@ -73,13 +79,13 @@ if __name__ == '__main__':
         if v == 'skipsubmitted':
             skipsubmitted = True
         if v == 'startwith':
-            start_with = int(sys.argv[i+1])
+            start_with = int(sys.argv[i + 1])
         if v == 'maxsuffix':
-            max_suffix = int(sys.argv[i+1])
+            max_suffix = int(sys.argv[i + 1])
         if v == 'minsuppliers':
-            minsuppliers = int(sys.argv[i+1])
+            minsuppliers = int(sys.argv[i + 1])
         if v == 'maxsuppliers':
-            maxsuppliers = int(sys.argv[i+1])
+            maxsuppliers = int(sys.argv[i + 1])
         if v == 'sortbycarsize':
             sortbycarsize = True
         if v == 'TESTONLY':
@@ -118,13 +124,13 @@ if __name__ == '__main__':
         if suppliers[car_no] > maxsuppliers:
             continue
         
-        tasks.append((car_no,suppliers[car_no],stream))
+        tasks.append((car_no, suppliers[car_no], stream))
     
     
     if sortbycarsize:
-        tasks.sort(key = lambda (n, sup, s): (sup, len(s)))
+        tasks.sort(key=lambda (n, sup, s): (sup, len(s)))
     else:
-        tasks.sort(key = lambda (n, sup, s): (sup, random()*0.01))
+        tasks.sort(key=lambda (n, sup, s): (sup, random()*0.01))
     
     if start_with:
         start_idx = 0

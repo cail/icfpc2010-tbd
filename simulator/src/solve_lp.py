@@ -34,7 +34,10 @@ def solve_LP(car):
         else:
             problem += term >= 0
     
-    result = problem.solve(GLPK(msg=False))
+    try:
+        result = problem.solve(GLPK(msg=False))
+    except PulpSolverError:
+        return
     #print problem
     #print map(value,vars)
     
