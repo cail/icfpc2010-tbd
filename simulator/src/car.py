@@ -82,8 +82,11 @@ class Car(object):
         return car
     
     def to_stream(self):
-        return min(self.permute(perm).raw_to_stream()
-            for perm in permutations(range(self.num_tanks)))
+        opts = [(self.permute(perm).raw_to_stream(), perm)
+                for perm in permutations(range(self.num_tanks))]
+        return min(opts)
+        #return min(self.permute(perm).raw_to_stream()
+        #    for perm in permutations(range(self.num_tanks)))
 
     def length(self):
         return sum(len(ch.upper)+len(ch.lower) for ch, _ in self.all_chambers())
