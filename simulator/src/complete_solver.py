@@ -24,7 +24,7 @@ from scheme import key
     
 VERBOSE = True
 
-max_suffix = 30
+max_suffix = 15
 
 def solve(car_string):
     assert car_string.strip() != '0'
@@ -35,8 +35,13 @@ def solve(car_string):
     
     suffix = find_fuel_stream(car)
     
+    
     if suffix is None:
         print 'fail'
+        return
+    
+    if len(suffix) > 10000:
+        print 'too long'
         return
     
     print len(suffix), suffix
@@ -69,10 +74,10 @@ if __name__ == '__main__':
         id, sup = line
         suppliers[int(id)] = int(sup)
 
-    skipsubmitted = False
+    skipsubmitted = True
     start_with = None
-    minsuppliers = -1
-    maxsuppliers = -1
+    minsuppliers = -2
+    maxsuppliers = -2
     sortbycarsize = False
     testonly = False
     for i, v in enumerate(sys.argv):
