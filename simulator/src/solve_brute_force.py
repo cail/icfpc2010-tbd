@@ -19,7 +19,7 @@ for i in range(1, 7):
 print 'done'     
 
 def solve_brute_force(car):
-    timeout = 1.0
+    timeout = 3.0
     start = clock()
     
     for fuel in fuels_to_search[car.num_tanks]:
