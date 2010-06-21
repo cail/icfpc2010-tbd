@@ -1,7 +1,15 @@
+try:
+    import psyco
+    psyco.full()
+except ImportError:
+    print "you do not have psyco, but (hopefully) it's fine"
+
 from pprint import pprint
 import csv
 import re
-from random import shuffle, random
+from random import shuffle, random, seed
+#seed(123)
+
 import sys
 from multiprocessing import Pool, TimeoutError
 
@@ -10,11 +18,13 @@ from car import Car, fuel_to_stream
 from scheme_as_sat import generate_scheme_for_fuel
 from find_fuel import find_fuel_stream
 from submit_fuel import submit_fuel, login, submit_test_car_fuel
+from factory_builder import fast_generate_scheme_for_fuel
+from scheme import key
     
     
 VERBOSE = True
 
-max_suffix = 40
+max_suffix = 15
 
 def solve(car_string):
     assert car_string.strip() != '0'
@@ -25,25 +35,28 @@ def solve(car_string):
     
     suffix = find_fuel_stream(car)
     
+    
     if suffix is None:
         print 'fail'
         return
     
-    print len(suffix), suffix
-    
-    if len(suffix) > max_suffix:
-        print 'skip'
+    if len(suffix) > 10000:
+        print 'too long'
         return
     
-    suffix = map(int, suffix)
-
-    scheme = generate_scheme_for_fuel(suffix)
+    print len(suffix), suffix
     
+    suffix = map(int, suffix)
+    if len(suffix) < max_suffix:
+        scheme = generate_scheme_for_fuel(suffix)
+    else:
+        scheme = fast_generate_scheme_for_fuel(suffix)
+        
     if scheme is None:
         return None
-    
     s = str(scheme)
-    print len(s.split('\n'))-2,'gates'
+    
+    print len(s.split('\n')) - 2, 'gates'
     return s
 
 
@@ -61,23 +74,23 @@ if __name__ == '__main__':
         id, sup = line
         suppliers[int(id)] = int(sup)
 
-    skipsubmitted = False
+    skipsubmitted = True
     start_with = None
-    minsuppliers = 0
-    maxsuppliers = 1000
+    minsuppliers = -2
+    maxsuppliers = -2
     sortbycarsize = False
     testonly = False
     for i, v in enumerate(sys.argv):
         if v == 'skipsubmitted':
             skipsubmitted = True
         if v == 'startwith':
-            start_with = int(sys.argv[i+1])
+            start_with = int(sys.argv[i + 1])
         if v == 'maxsuffix':
-            max_suffix = int(sys.argv[i+1])
+            max_suffix = int(sys.argv[i + 1])
         if v == 'minsuppliers':
-            minsuppliers = int(sys.argv[i+1])
+            minsuppliers = int(sys.argv[i + 1])
         if v == 'maxsuppliers':
-            maxsuppliers = int(sys.argv[i+1])
+            maxsuppliers = int(sys.argv[i + 1])
         if v == 'sortbycarsize':
             sortbycarsize = True
         if v == 'TESTONLY':
@@ -116,13 +129,13 @@ if __name__ == '__main__':
         if suppliers[car_no] > maxsuppliers:
             continue
         
-        tasks.append((car_no,suppliers[car_no],stream))
+        tasks.append((car_no, suppliers[car_no], stream))
     
     
     if sortbycarsize:
-        tasks.sort(key = lambda (n, sup, s): (sup, len(s)))
+        tasks.sort(key=lambda (n, sup, s): (sup, len(s)))
     else:
-        tasks.sort(key = lambda (n, sup, s): (sup, random()*0.01))
+        tasks.sort(key=lambda (n, sup, s): (sup, random()*0.01))
     
     if start_with:
         start_idx = 0
@@ -142,8 +155,8 @@ if __name__ == '__main__':
     
     for car_no, sup, stream in tasks:
         
-        if sup == 1:
-            continue
+        #if sup == 1:
+        #    continue
         
         print "CAR #", car_no, '   ', sup, 'suppliers'
         total += 1
@@ -163,7 +176,7 @@ if __name__ == '__main__':
                     fout.write(repr((car_no, result)))
                     fout.close()
             else:
-                if False and browser is None:
+                if browser is None:
                     # disabled because there is a risk of timeout
                     print 'login',
                     browser = login()

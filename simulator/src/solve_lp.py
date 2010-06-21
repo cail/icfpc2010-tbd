@@ -10,6 +10,10 @@ def solve_LP(car):
     problem = LpProblem('search for fuel', LpMinimize)
     problem += lpSum(vars)
     
+    if (len(car.main_chambers) + len(car.aux_chambers))*car.num_tanks > 200:
+        # too hard
+        return
+    
     for chamber, isMain in car.all_chambers():
         coeffs = [0]*car.num_tanks
         for i in chamber.upper:
@@ -30,7 +34,10 @@ def solve_LP(car):
         else:
             problem += term >= 0
     
-    result = problem.solve(GLPK(msg=False))
+    try:
+        result = problem.solve(GLPK(msg=False))
+    except PulpSolverError:
+        return
     #print problem
     #print map(value,vars)
     

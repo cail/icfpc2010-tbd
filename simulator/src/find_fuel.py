@@ -4,17 +4,32 @@ from solve_brute_force import solve_brute_force
 from solve_lp import solve_LP
 from solve_mc import solve_monte_carlo
 
+from functools import partial
+
 USE_CACHE = True
 # set it to false if you improve solver and want to calculate better solutions
 
+
+def solve_monte_carlo_size2(car):
+    return solve_monte_carlo(car, size=2) 
+
+def solve_monte_carlo_size3(car):
+    return solve_monte_carlo(car, size=3) 
+
+def solve_monte_carlo_size6(car):
+    return solve_monte_carlo(car, size=6) 
 
 
 def find_fuel(car):
     best = None
     best_len = 1e100
     
-    for f in [solve_brute_force, solve_LP]:
-        print f.__name__,
+    for f in [solve_brute_force, 
+              solve_monte_carlo_size2,
+              solve_monte_carlo_size3,
+              solve_monte_carlo_size6,
+              solve_LP]:
+        print f,
         fuel = f(car)
         if fuel is not None:
             assert car.test_on_fuel(fuel), fuel
@@ -23,6 +38,8 @@ def find_fuel(car):
             if l < best_len:
                 best_len = l
                 best = fuel
+            if f == solve_brute_force: # brute force always finds best solution
+                break
         else:
             print
             

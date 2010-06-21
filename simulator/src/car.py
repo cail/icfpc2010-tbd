@@ -1,10 +1,12 @@
 from random import randrange
 from collections import namedtuple
+from itertools import *
+from copy import deepcopy
 
-from numpy import dot, array, ndarray
+from numpy import dot, array, ndarray, identity
 
 from tstream_parser import parse_chambers
-from tstream_composer import compose_matrices
+from tstream_composer import compose_matrices, compose_chambers
 
 __all__ = [
     'Car',
@@ -12,13 +14,16 @@ __all__ = [
     'fuel_to_stream',
 ]
 
-def fuel_to_stream(fuel):
+def numpy_fuel(fuel):
     if not isinstance(fuel[0], ndarray):
         fuel = [array([[f]], dtype=object) for f in fuel]
-    
+    return fuel
+
+def fuel_to_stream(fuel):
+    fuel = numpy_fuel(fuel)
     q = []
     for f in fuel:
-        q.append(list(map(list,f.transpose())))
+        q.append(list(map(list,f)))
     
     result = compose_matrices(q)
     assert all(c in '012' for c in result)
@@ -38,7 +43,7 @@ class Car(object):
         'aux_chambers',
         'representation',
         ]
-
+    
     @staticmethod
     def from_stream(s):
         assert isinstance(s,basestring)
@@ -57,9 +62,31 @@ class Car(object):
         car.num_tanks = t+1
         return car
     
-    def to_stream(self):
-        raise NotImplementedError()
+    def raw_to_stream(self):
+        chambers = []
+        for ch, isMain in self.all_chambers():
+            if isMain:
+                chambers.append((0,ch.upper,ch.lower))
+            else:
+                chambers.append((1,ch.upper,ch.lower))
+        result = compose_chambers(chambers)
+        return result
     
+    def permute(self, perm):
+        car = deepcopy(self)
+        for ch, _ in car.all_chambers():
+            for pipe in ch:
+                for i in range(len(pipe)):
+                    pipe[i] = perm[pipe[i]] 
+        return car
+    
+    def to_stream(self):
+        return min(self.permute(perm).raw_to_stream()
+            for perm in permutations(range(self.num_tanks)))
+
+    def length(self):
+        return sum(len(ch.upper)+len(ch.lower) for ch, _ in self.all_chambers())
+   
     def __str__(self):
         return "Car(%s,\n  %s,\n  %s)"%(self.num_tanks, self.main_chambers, self.aux_chambers)
 
@@ -82,6 +109,30 @@ class Car(object):
         return True
 
     def test_on_fuel(self, fuel):
+        fuel = numpy_fuel(fuel)
+        n, n = fuel[0].shape
+        for chamber, isMain in self.all_chambers():
+            upper = identity(n, dtype=object)
+            for t in chamber.upper:
+                upper = dot(upper, fuel[t])
+            lower = identity(n, dtype=object)
+            for t in chamber.lower:
+                lower = dot(lower, fuel[t])
+            flag = True
+            if isMain and upper[0,0] <= lower[0,0]:
+                return False
+            for i in range(n):
+                for j in range(n):
+                    if upper[i,j] < lower[i,j]:
+                        flag = False
+                        break
+            if not flag:
+                return False
+        
+        #assert self.test_on_fuel_old(fuel)
+        return True
+
+    def test_on_fuel_old(self, fuel):
         """
         fuel is list of either numpy 2d arrays or just integers (for 1d case)
         """
@@ -134,7 +185,10 @@ def test_chamber_on_input(chamber, fuel, input, main):
 
 
 if __name__ == '__main__':
-    car = Car.from_stream('122221001200000000000000000000010')
+    s = '122221001200000000000000000000010'
+    car = Car.from_stream(s)
     
     print car
+    result = car.to_stream()
+    assert s == result
     
