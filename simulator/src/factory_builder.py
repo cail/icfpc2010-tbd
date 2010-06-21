@@ -1,4 +1,4 @@
-from scheme import Scheme
+from scheme import Scheme, key
 
 def build_sequences(output):
     node_transitions = ('00', '02', '12', '21', '11')
@@ -32,9 +32,9 @@ def build_scheme(sequences):
         prev_start = current - length
     s.connect(str(sequences[0] - 1) + 'L', 'X')
     s.connect('X', str(input_node) + 'L')
-    print s.to
-    print s.from_
-    
+    #print s.to
+    #print s.from_
+    s.validate()
     return s
 
 def compile_factory(output):
@@ -44,6 +44,16 @@ def compile_factory(output):
     res = s.eval(input)
     assert res == map(int, output)
     return str(s)
+
+def fast_generate_scheme_for_fuel(suffix):
+    output = ''.join(map(str,key+suffix))
+    seq = build_sequences(output)
+    s = build_scheme(seq)
+    input = [2] * len(output) # don't care
+    res = s.eval(input)
+    assert res == map(int, output)
+    return s
+
     
 if __name__ == '__main__':
     print compile_factory('00122122211')

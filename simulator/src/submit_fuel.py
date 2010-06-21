@@ -69,6 +69,8 @@ def submit_test_car_fuel(cardata, fuel):
 #    print body
     bs = BeautifulSoup(body)
     
+    print bs
+    
     result = ''
     for pre in bs.fetch('pre'):
         result += pre.renderContents()
@@ -115,8 +117,7 @@ def submit_fuel(car, fuel, br=None):
     if result.find('You have already submitted this solution') != -1:
         cache[car] = fuel
         save_cache()
-        if FAIL_ON_SUBMISSION_ERROR:
-            assert False, result
+        
         return result
 
     if result.find('Good!') != -1:
