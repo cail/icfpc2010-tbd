@@ -3,6 +3,8 @@ from car import fuel_to_stream
 from solve_brute_force import solve_brute_force
 from solve_lp import solve_LP
 from solve_mc import solve_monte_carlo
+from collections import defaultdict
+from pprint import pprint
 
 from functools import partial
 
@@ -20,9 +22,12 @@ def solve_monte_carlo_size6(car):
     return solve_monte_carlo(car, size=6) 
 
 
+who_solved = defaultdict(int)
+
 def find_fuel(car):
     best = None
     best_len = 1e100
+    best_solver = 'nobody'
     
     for f in [solve_brute_force, 
               solve_monte_carlo_size2,
@@ -38,11 +43,16 @@ def find_fuel(car):
             if l < best_len:
                 best_len = l
                 best = fuel
+                best_solver = f
             if f == solve_brute_force: # brute force always finds best solution
                 break
         else:
             print
-            
+    
+    who_solved[best_solver] += 1
+    print 'solvers stats:'
+    pprint(dict(who_solved))      
+      
     return best
 
 CACHE_FILE = 'car_fuel_cache.txt'
